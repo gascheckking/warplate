@@ -17,3 +17,23 @@
 .gas-labels span {
   font-size: 0.8rem; /* Mindre text */
 }
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr !important; /* En kolumn på mobil */
+    padding: 10px;
+  }
+
+  .nav {
+    overflow-x: auto; /* Scrollbar för flikar */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .card {
+    margin: 10px 0;
+    padding: 15px;
+  }
+
+  .gas-card h2 {
+    font-size: 1.2rem; /* Mindre rubrik */
+  }
+}
