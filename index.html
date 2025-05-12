@@ -1,21 +1,76 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Warp.ai Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
+  <title>Warp.ai: Onchain Activities</title>
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- Farcaster Frame Metadata (BEVARAD) -->
+  <meta property="fc:frame" content="vNext">
+  <meta property="fc:frame:image" content="https://gascheck-new.vercel.app/api/og">
+  <meta property="fc:frame:button:1" content="Check My Onchain XP">
+  <meta property="fc:frame:post_url" content="https://gascheck-new.vercel.app/api/frame">
 </head>
 <body>
-  <button id="connectWallet">🔗 Connect Wallet</button>
-  <div id="xpDisplay">0 XP 🔥</div>
-  <div class="gas-progress" id="gasProgress"></div>
-  <div id="gasValue">0 Gwei</div>
-  <button id="buyPremium" class="premium-btn">Köp Premium (0.009 ETH)</button>
-  <script type="module" src="app.js"></script>
-  <script type="module" src="gas.js"></script>
-  <script type="module" src="lang.js"></script>
+  <!-- Header (Oförändrat) -->
+  <header>
+    <div class="topbar">
+      <div class="logo">Warp.ai<span class="beta-tag">Beta</span></div>
+      <div class="wallet-group">
+        <button id="connect-wallet" class="pulse">🔗 Connect Wallet</button>
+        <div id="wallet-section" class="hidden">
+          <span id="wallet-address" class="address-badge"></span>
+          <div class="xp-display">
+            <span id="xp-counter">0</span> XP 
+            <span id="streak-counter" class="streak">0 🔥</span>
+          </div>
+        </div>
+      </div>
+      <div class="settings">⚙️</div>
+    </div>
+  </header>
+
+  <!-- Nav (Fixad med rätt JS-koppling) -->
+  <nav class="nav">
+    <div class="nav-item active" data-tab="overview" data-icon="🏠"></div>
+    <div class="nav-item" data-tab="leaderboard" data-icon="🏆"></div>
+    <div class="nav-item" data-tab="favorites" data-icon="⭐"></div>
+    <div class="nav-item" data-tab="rewards" data-icon="🎁"></div>
+    <div class="nav-item" data-tab="history" data-icon="📜"></div>
+    <div class="nav-item premium-tag" data-tab="premium" data-icon="💎"></div>
+    <div class="nav-item" data-tab="feed" data-icon="🔄"></div>
+    <div class="lang-switch" data-lang="sv">🇸🇪</div>
+    <div class="lang-switch" data-lang="en">🇬🇧</div>
+  </nav>
+
+  <main>
+    <!-- Gasmätare Fixad (ETH Base Fee + Samma Styling) -->
+    <section id="overview" class="tab-content active">
+      <div class="dashboard-grid">
+        <!-- ... andra kort ... -->
+        <div class="card gas-card">
+          <h2>⛽ ETH Base Fee</h2>  <!-- Uppdaterad titel -->
+          <div class="gas-meter">
+            <div class="gas-bar">
+              <div id="gasFill" class="gas-fill"></div>
+            </div>
+            <div class="gas-labels">
+              <span>Low</span>
+              <span>Avg</span>
+              <span>High</span>
+            </div>
+          </div>
+          <p id="gas-status" class="gas-update"><span id="base-fee">0</span> Gwei</p> <!-- Ny basfee-visning -->
+        </div>
+        <!-- ... -->
+      </div>
+    </section>
+    <!-- ... övriga sektioner oförändrade ... -->
+  </main>
+
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/gas.js"></script> <!-- Ny gas.js -->
+  <script type="module" src="/lang.js"></script>
 </body>
 </html>
