@@ -1,19 +1,37 @@
-/* Ny gasmätarstyling */
-.gas-card {
-  max-width: 300px; /* Mindre storlek */
-  margin: 0 auto;   /* Centrera */
+:root {
+  --primary: #00ff88;
+  --error: #ff465c;
+  --bg: #0d0d0d;
+  --card-bg: #1a1a1a;
 }
 
-.gas-bar {
-  height: 8px !important; /* Tunnare */
-  background: #1a2b3c !important; /* Mörkblå bakgrund */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: #fff;
 }
 
-.gas-fill {
-  background: linear-gradient(90deg, #00ff88 0%, #00a3ff 100%) !important; /* Grön → Blå gradient */
-  height: 8px !important;
+/* Din pulserande knappdesign */
+#connect-wallet.pulse {
+  animation: pulse 2s infinite;
 }
 
-.gas-labels span {
-  font-size: 0.8rem; /* Mindre text */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+  50% { box-shadow: 0 0 10px 4px rgba(0, 255, 136, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+}
+
+/* Korrigerad nav-item syntax */
+.nav-item.active {
+  background: var(--primary) !important;
+}
+
+/* Gas-meter med korrekt ID */
+#gasFill {
+  height: 10px;
+  background: var(--primary);
+  width: 0;
+  transition: width 0.5s ease;
 }
