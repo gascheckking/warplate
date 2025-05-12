@@ -1,21 +1,17 @@
 export default async (req, res) => {
   const { untrustedData } = req.body;
-
-  // Validera Farcaster Frame Data
-  if (!untrustedData?.fid) {
-    return res.status(400).json({ error: "Ogiltig Frame-förfrågan" });
-  }
-
-  // Base Network Config
-  const CONTRACT_ADDRESS = "0xYOUR_DEPLOYED_CONTRACT"; // Ersätt här
-  const WARP_CLAIM_SELECTOR = "0x9e281a98"; // claimDaily() function selector
+  
+  // Base Network config
+  const CONTRACT_ADDRESS = "0x8ab57bdfc4e900b62f309bfaa6e1802755330ca6";
+  const VALIDATOR_ADDRESS = "0xValidatorContract";
+  const CLAIM_SELECTOR = "0x9e281a98";
 
   try {
     // Knapp 1: Visa gaspris
     if (untrustedData.buttonIndex === 1) {
       return res.json({
         type: 'message',
-        message: '⚡ Visa gaspriser på warpsi.xyz' // Länka till din huvudsida
+        message: '✅ Använd WarpAI-appen för live-data'
       });
     }
 
@@ -23,25 +19,23 @@ export default async (req, res) => {
     if (untrustedData.buttonIndex === 2) {
       return res.json({
         type: 'tx',
-        chainId: 'eip155:8453', // Base
+        chainId: 'eip155:8453',
         method: 'eth_sendTransaction',
         params: {
-          abi: [{ 
-            "inputs": [],
-            "name": "claimDaily",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          }],
           to: CONTRACT_ADDRESS,
-          data: WARP_CLAIM_SELECTOR,
-          value: '0'
+          data: CLAIM_SELECTOR,
+          abi: [{
+            "inputs": [{"name":"frameProof","type":"bytes"}],
+            "name":"claimDaily",
+            "outputs":[],
+            "stateMutability":"nonpayable",
+            "type":"function"
+          }]
         }
       });
     }
 
   } catch (error) {
-    console.error("Frame error:", error);
-    return res.status(500).json({ error: "Serverfel" });
+    return res.status(500).json({ error: "WarpAI Error 001" });
   }
 };
