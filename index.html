@@ -3,96 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warp.ai - Onchain Activity Dashboard</title>
+  <title>WarpAI</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
 </head>
-<body>
-  <!-- Header -->
-  <header class="app-header">
-    <div class="header-content">
-      <h1 class="logo">🛸 Warp.ai</h1>
-      <div class="wallet-section">
-        <div class="xp-badge" id="xpDisplay">0 XP 🔥</div>
-        <button class="connect-btn" id="connectWallet">Connect Wallet</button>
+<body class="dark">
+  <div class="app-container">
+    <header>
+      <h1>WarpAI</h1>
+      <button id="connect-wallet">Connect</button>
+    </header>
+
+    <div class="card">
+      <h2>Base Gas</h2>
+      <div class="gas-meter">
+        <div id="gas-fill"></div>
       </div>
+      <p id="gas-price">Loading...</p>
+      <p id="gas-mood">😎</p>
     </div>
-  </header>
 
-  <!-- Navigationsflikar -->
-  <nav class="tab-bar">
-    <button class="tab active" data-tab="overview">Översikt</button>
-    <button class="tab" data-tab="premium">Premium</button>
-    <button class="tab" data-tab="activity">Aktivitet</button>
-  </nav>
+    <div class="card">
+      <h2>Claim $WARP</h2>
+      <button id="claim-btn">🎁 Daily Claim</button>
+    </div>
+  </div>
 
-  <!-- Huvudinnehåll -->
-  <main class="main-content">
-    <!-- Översiktsflöde -->
-    <section id="overview" class="tab-content active">
-      <div class="grid-container">
-        <!-- Gasmätare -->
-        <div class="card gas-card">
-          <h2>⛽ ETH Basavgift</h2>
-          <div class="gas-meter">
-            <div class="gas-progress" id="gasProgress"></div>
-            <div class="gas-labels">
-              <span>Låg</span>
-              <span>Medel</span>
-              <span>Hög</span>
-            </div>
-            <div class="gas-value" id="gasValue">0 Gwei</div>
-          </div>
-        </div>
-
-        <!-- WarpPoints -->
-        <div class="card points-card">
-          <h2>🪙 WarpPoints</h2>
-          <div class="points-display">
-            <span id="warpPoints">0</span> WP
-            <button class="buy-btn" id="buyWP">Köp WP</button>
-          </div>
-        </div>
-
-        <!-- Onchain Earnings -->
-        <div class="card earnings-card">
-          <h2>💰 Intäkter</h2>
-          <div class="earnings-display">
-            <div class="earning positive">
-              +$0.82 <span class="label">Vinst</span>
-            </div>
-            <div class="earning negative">
-              -$0.12 <span class="label">Avgifter</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Premium-sektion -->
-    <section id="premium" class="tab-content">
-      <div class="card premium-card">
-        <h2>💎 Warp Premium</h2>
-        <ul class="benefits-list">
-          <li>🔒 Gasrabatter upp till 50%</li>
-          <li>🚀 Exklusiva NFT-drops</li>
-          <li>📈 XP-boosters</li>
-        </ul>
-        <button class="premium-btn" id="buyPremium">Köp Premium - 0.009 ETH</button>
-      </div>
-    </section>
-
-    <!-- Aktivitetsspår -->
-    <section id="activity" class="tab-content">
-      <div class="card activity-card">
-        <h2>📜 Senaste Transaktioner</h2>
-        <div class="activity-list" id="activityList">
-          <!-- Dynamiskt inladdad aktivitet -->
-        </div>
-      </div>
-    </section>
-  </main>
-
+  <script src="gas.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
