@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warp.ai: Onchain Activities</title>
-  <link rel="stylesheet" href="/style.css" />
-
-  <!-- Farcaster Frame Metadata (BEVARAD) -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Farcaster Frame Metadata -->
   <meta property="fc:frame" content="vNext">
   <meta property="fc:frame:image" content="https://gascheck-new.vercel.app/api/og">
   <meta property="fc:frame:button:1" content="Check My Onchain XP">
   <meta property="fc:frame:post_url" content="https://gascheck-new.vercel.app/api/frame">
 </head>
+
 <body>
-  <!-- Header (Oförändrat) -->
   <header>
     <div class="topbar">
       <div class="logo">Warp.ai<span class="beta-tag">Beta</span></div>
@@ -26,12 +26,15 @@
             <span id="streak-counter" class="streak">0 🔥</span>
           </div>
         </div>
+        <div class="lang-menu">
+          <button class="lang-btn active" data-lang="en">🇬🇧</button>
+          <button class="lang-btn" data-lang="sv">🇸🇪</button>
+        </div>
+        <div class="settings">⚙️</div>
       </div>
-      <div class="settings">⚙️</div>
     </div>
   </header>
 
-  <!-- Nav (Fixad med rätt JS-koppling) -->
   <nav class="nav">
     <div class="nav-item active" data-tab="overview" data-icon="🏠"></div>
     <div class="nav-item" data-tab="leaderboard" data-icon="🏆"></div>
@@ -40,17 +43,13 @@
     <div class="nav-item" data-tab="history" data-icon="📜"></div>
     <div class="nav-item premium-tag" data-tab="premium" data-icon="💎"></div>
     <div class="nav-item" data-tab="feed" data-icon="🔄"></div>
-    <div class="lang-switch" data-lang="sv">🇸🇪</div>
-    <div class="lang-switch" data-lang="en">🇬🇧</div>
   </nav>
 
   <main>
-    <!-- Gasmätare Fixad (ETH Base Fee + Samma Styling) -->
     <section id="overview" class="tab-content active">
       <div class="dashboard-grid">
-        <!-- ... andra kort ... -->
         <div class="card gas-card">
-          <h2>⛽ ETH Base Fee</h2>  <!-- Uppdaterad titel -->
+          <h2 data-translate="gasTitle">⛽ ETH Base Fee</h2>
           <div class="gas-meter">
             <div class="gas-bar">
               <div id="gasFill" class="gas-fill"></div>
@@ -61,16 +60,18 @@
               <span>High</span>
             </div>
           </div>
-          <p id="gas-status" class="gas-update"><span id="base-fee">0</span> Gwei</p> <!-- Ny basfee-visning -->
+          <p id="gas-status" class="gas-update" data-translate="gasStatus">
+            ETH Base Fee: <span id="base-fee">0</span> Gwei
+          </p>
         </div>
-        <!-- ... -->
       </div>
     </section>
-    <!-- ... övriga sektioner oförändrade ... -->
+
+    <!-- Övriga sektioner enligt din struktur -->
   </main>
 
-  <script type="module" src="/app.js"></script>
-  <script type="module" src="/gas.js"></script> <!-- Ny gas.js -->
-  <script type="module" src="/lang.js"></script>
+  <script type="module" src="app.js"></script>
+  <script type="module" src="gas.js"></script>
+  <script type="module" src="lang.js"></script>
 </body>
 </html>
