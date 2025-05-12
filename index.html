@@ -1,80 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
-  <!-- Head-innehåll oförändrat -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warp.ai - Onchain Activity Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
 </head>
 <body>
-  <header>
-    <!-- Header oförändrad -->
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="logo">🛸 Warp.ai</h1>
+      <div class="wallet-section">
+        <div class="xp-badge" id="xpDisplay">0 XP 🔥</div>
+        <button class="connect-btn" id="connectWallet">Connect Wallet</button>
+      </div>
+    </div>
   </header>
 
-  <nav class="nav">
-    <div class="nav-item active" data-tab="overview">🏠 Overview</div>
-    <div class="nav-item" data-tab="activities">📊 Onchain Activities</div>
-    <div class="nav-item" data-tab="rewards">🎖️ Your Rewards</div>
-    <div class="nav-item" data-tab="leaderboard">🏆 Leaderboard</div>
+  <!-- Navigationsflikar -->
+  <nav class="tab-bar">
+    <button class="tab active" data-tab="overview">Översikt</button>
+    <button class="tab" data-tab="premium">Premium</button>
+    <button class="tab" data-tab="activity">Aktivitet</button>
   </nav>
 
-  <main>
-    <!-- Overview Tab -->
+  <!-- Huvudinnehåll -->
+  <main class="main-content">
+    <!-- Översiktsflöde -->
     <section id="overview" class="tab-content active">
-      <div class="dashboard-grid">
-        <!-- Kompakt gasmätare -->
+      <div class="grid-container">
+        <!-- Gasmätare -->
         <div class="card gas-card">
-          <h2>⛽ Network Fee</h2>
-          <div class="gas-meter-compact">
-            <div class="gas-bar">
-              <div class="gas-fill" style="width: 45%"></div>
+          <h2>⛽ ETH Basavgift</h2>
+          <div class="gas-meter">
+            <div class="gas-progress" id="gasProgress"></div>
+            <div class="gas-labels">
+              <span>Låg</span>
+              <span>Medel</span>
+              <span>Hög</span>
             </div>
-            <div class="gas-info">
-              <span class="gwei">12 Gwei</span>
-              <span class="usd">≈ $0.32</span>
-            </div>
+            <div class="gas-value" id="gasValue">0 Gwei</div>
           </div>
         </div>
 
-        <!-- WarpPoints kompakt -->
+        <!-- WarpPoints -->
         <div class="card points-card">
-          <h2>🪙 Your WarpPoints</h2>
-          <div class="points-balance">1,230 WP</div>
-          <small>≈ $12.30 USD</small>
+          <h2>🪙 WarpPoints</h2>
+          <div class="points-display">
+            <span id="warpPoints">0</span> WP
+            <button class="buy-btn" id="buyWP">Köp WP</button>
+          </div>
+        </div>
+
+        <!-- Onchain Earnings -->
+        <div class="card earnings-card">
+          <h2>💰 Intäkter</h2>
+          <div class="earnings-display">
+            <div class="earning positive">
+              +$0.82 <span class="label">Vinst</span>
+            </div>
+            <div class="earning negative">
+              -$0.12 <span class="label">Avgifter</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Onchain Activities Tab -->
-    <section id="activities" class="tab-content">
-      <div class="activity-feed">
-        <div class="activity-item">
-          <div class="activity-icon">🔄</div>
-          <div class="activity-details">
-            <h3>Uniswap Swap</h3>
-            <p>+$0.82 profit <span class="fee">($0.12 fee)</span></p>
-            <span class="time">2h ago</span>
-          </div>
-        </div>
-        <!-- Fler aktiviteter här -->
+    <!-- Premium-sektion -->
+    <section id="premium" class="tab-content">
+      <div class="card premium-card">
+        <h2>💎 Warp Premium</h2>
+        <ul class="benefits-list">
+          <li>🔒 Gasrabatter upp till 50%</li>
+          <li>🚀 Exklusiva NFT-drops</li>
+          <li>📈 XP-boosters</li>
+        </ul>
+        <button class="premium-btn" id="buyPremium">Köp Premium - 0.009 ETH</button>
       </div>
     </section>
 
-    <!-- Rewards Tab -->
-    <section id="rewards" class="tab-content">
-      <div class="rewards-grid">
-        <div class="reward-tier">
-          <h3>🥉 Bronze Tier</h3>
-          <p>Earn 10% fee rebates</p>
-          <div class="progress-bar">
-            <div class="progress" style="width: 65%">65%</div>
-          </div>
-        </div>
-        <div class="reward-tier">
-          <h3>💎 Premium Unlock</h3>
-          <button class="premium-cta">Upgrade ($9/mån)</button>
+    <!-- Aktivitetsspår -->
+    <section id="activity" class="tab-content">
+      <div class="card activity-card">
+        <h2>📜 Senaste Transaktioner</h2>
+        <div class="activity-list" id="activityList">
+          <!-- Dynamiskt inladdad aktivitet -->
         </div>
       </div>
     </section>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
