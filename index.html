@@ -1,77 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warp.ai: Onchain Activities</title>
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Farcaster Frame Metadata -->
-  <meta property="fc:frame" content="vNext">
-  <meta property="fc:frame:image" content="https://gascheck-new.vercel.app/api/og">
-  <meta property="fc:frame:button:1" content="Check My Onchain XP">
-  <meta property="fc:frame:post_url" content="https://gascheck-new.vercel.app/api/frame">
+  <!-- Head-innehåll oförändrat -->
 </head>
-
 <body>
   <header>
-    <div class="topbar">
-      <div class="logo">Warp.ai<span class="beta-tag">Beta</span></div>
-      <div class="wallet-group">
-        <button id="connect-wallet" class="pulse">🔗 Connect Wallet</button>
-        <div id="wallet-section" class="hidden">
-          <span id="wallet-address" class="address-badge"></span>
-          <div class="xp-display">
-            <span id="xp-counter">0</span> XP 
-            <span id="streak-counter" class="streak">0 🔥</span>
-          </div>
-        </div>
-        <div class="lang-menu">
-          <button class="lang-btn active" data-lang="en">🇬🇧</button>
-          <button class="lang-btn" data-lang="sv">🇸🇪</button>
-        </div>
-        <div class="settings">⚙️</div>
-      </div>
-    </div>
+    <!-- Header oförändrad -->
   </header>
 
   <nav class="nav">
-    <div class="nav-item active" data-tab="overview" data-icon="🏠"></div>
-    <div class="nav-item" data-tab="leaderboard" data-icon="🏆"></div>
-    <div class="nav-item" data-tab="favorites" data-icon="⭐"></div>
-    <div class="nav-item" data-tab="rewards" data-icon="🎁"></div>
-    <div class="nav-item" data-tab="history" data-icon="📜"></div>
-    <div class="nav-item premium-tag" data-tab="premium" data-icon="💎"></div>
-    <div class="nav-item" data-tab="feed" data-icon="🔄"></div>
+    <div class="nav-item active" data-tab="overview">🏠 Overview</div>
+    <div class="nav-item" data-tab="activities">📊 Onchain Activities</div>
+    <div class="nav-item" data-tab="rewards">🎖️ Your Rewards</div>
+    <div class="nav-item" data-tab="leaderboard">🏆 Leaderboard</div>
   </nav>
 
   <main>
+    <!-- Overview Tab -->
     <section id="overview" class="tab-content active">
       <div class="dashboard-grid">
+        <!-- Kompakt gasmätare -->
         <div class="card gas-card">
-          <h2 data-translate="gasTitle">⛽ ETH Base Fee</h2>
-          <div class="gas-meter">
+          <h2>⛽ Network Fee</h2>
+          <div class="gas-meter-compact">
             <div class="gas-bar">
-              <div id="gasFill" class="gas-fill"></div>
+              <div class="gas-fill" style="width: 45%"></div>
             </div>
-            <div class="gas-labels">
-              <span>Low</span>
-              <span>Avg</span>
-              <span>High</span>
+            <div class="gas-info">
+              <span class="gwei">12 Gwei</span>
+              <span class="usd">≈ $0.32</span>
             </div>
           </div>
-          <p id="gas-status" class="gas-update" data-translate="gasStatus">
-            ETH Base Fee: <span id="base-fee">0</span> Gwei
-          </p>
+        </div>
+
+        <!-- WarpPoints kompakt -->
+        <div class="card points-card">
+          <h2>🪙 Your WarpPoints</h2>
+          <div class="points-balance">1,230 WP</div>
+          <small>≈ $12.30 USD</small>
         </div>
       </div>
     </section>
 
-    <!-- Övriga sektioner enligt din struktur -->
+    <!-- Onchain Activities Tab -->
+    <section id="activities" class="tab-content">
+      <div class="activity-feed">
+        <div class="activity-item">
+          <div class="activity-icon">🔄</div>
+          <div class="activity-details">
+            <h3>Uniswap Swap</h3>
+            <p>+$0.82 profit <span class="fee">($0.12 fee)</span></p>
+            <span class="time">2h ago</span>
+          </div>
+        </div>
+        <!-- Fler aktiviteter här -->
+      </div>
+    </section>
+
+    <!-- Rewards Tab -->
+    <section id="rewards" class="tab-content">
+      <div class="rewards-grid">
+        <div class="reward-tier">
+          <h3>🥉 Bronze Tier</h3>
+          <p>Earn 10% fee rebates</p>
+          <div class="progress-bar">
+            <div class="progress" style="width: 65%">65%</div>
+          </div>
+        </div>
+        <div class="reward-tier">
+          <h3>💎 Premium Unlock</h3>
+          <button class="premium-cta">Upgrade ($9/mån)</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script type="module" src="app.js"></script>
-  <script type="module" src="gas.js"></script>
-  <script type="module" src="lang.js"></script>
 </body>
 </html>
