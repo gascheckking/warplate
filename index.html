@@ -3,31 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI</title>
+  <title>WarpAI | Live Gas Tracker & WARP Rewards</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark">
+<body>
   <div class="app-container">
-    <header>
-      <h1>WarpAI</h1>
-      <button id="connect-wallet">Connect</button>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="wallet-section">
+        <div class="logo">WarpAI</div>
+        <button id="connect-wallet" class="connect-btn">Connect Wallet</button>
+      </div>
+      <div class="xp-badge">XP: <span id="xp-counter">0</span></div>
     </header>
 
+    <!-- Gas Tracker Card -->
     <div class="card">
-      <h2>Base Gas</h2>
+      <h2>Base Network Gas</h2>
       <div class="gas-meter">
-        <div id="gas-fill"></div>
+        <div class="gas-progress">
+          <div id="gas-fill" style="width: 0%"></div>
+        </div>
+        <div class="gas-labels">
+          <span>😎 Low</span>
+          <span>💀 High</span>
+        </div>
       </div>
-      <p id="gas-price">Loading...</p>
-      <p id="gas-mood">😎</p>
+      <div class="gas-value">
+        <span id="gas-price">Loading...</span>
+        <span id="gas-mood"></span>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>Claim $WARP</h2>
-      <button id="claim-btn">🎁 Daily Claim</button>
+    <!-- Claim Section -->
+    <div class="card claim-section">
+      <h2>Daily WARP Rewards</h2>
+      <button id="claim-btn">🎁 CLAIM 100 WARP</button>
+      <div class="streak-display">
+        🔥 Current Streak: <span id="streak-counter">0</span> days
+      </div>
+    </div>
+
+    <!-- Premium Banner -->
+    <div class="card premium-card">
+      <h3>WarpAI Premium+</h3>
+      <ul class="benefits-list">
+        <li>✅ Gas Price Alerts</li>
+        <li>✅ 2x WARP Rewards</li>
+        <li>✅ Exclusive NFTs</li>
+      </ul>
+      <button class="premium-btn">✨ Upgrade Now</button>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="gas.js"></script>
   <script src="app.js"></script>
 </body>
