@@ -1,6 +1,56 @@
+// frame-action.js
+import { NeynarAPIClient } from '@neynar/nodejs-sdk';
+import { NextResponse } from 'next/server';
 
-export default async function handler(req, res) {
-  const { address } = req.body || {};
-  if (!address) return res.status(400).json({ error: 'No address provided' });
-  return res.status(200).json({ xp: 1234, streak: 5 });
+const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY);
+
+export async function POST(req) {
+  try {
+    // Validera Frame-förfrågan
+    const body = await req.json();
+    const { trustedData } = body;
+    
+    // Verifiera signatur med Neynar
+    const validation = await client.validateFrameAction(trustedData.messageBytes);
+    
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: "Ogiltig Frame-signatur" },
+        { status: 403 }
+      );
+    }
+
+    // Hämta användardata från valideringen
+    const { fid } = validation.action.interactor;
+    
+    // Generera dynamiskt svar
+    return NextResponse.json({
+      status: "success",
+      frame: {
+        version: "vNext",
+        image: `${process.env.NEXT_PUBLIC_BASE_URL}/api/og?fid=${fid}`,
+        post_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
+        buttons: [
+          {
+            label: "Visa min XP",
+            action: "post"
+          },
+          {
+            label: "Dela statistik",
+            action: "post_redirect"
+          }
+        ],
+        input: {
+          text: "Ange wallet-adress"
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Frame Action Error:", error);
+    return NextResponse.json(
+      { error: "Internt serverfel" },
+      { status: 500 }
+    );
+  }
 }
