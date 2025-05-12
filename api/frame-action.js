@@ -1,51 +1,39 @@
-// frame-action.js
-import { NeynarAPIClient } from '@neynar/nodejs-sdk';
-import { NextResponse } from 'next/server';
+// api/frame-action.js
+export default async (req, res) => {
+  const { untrustedData } = req.body;
 
-const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY);
+  // Base Network config
+  const CONTRACT_ADDRESS = "0x8ab57bdfc4e900b62f309bfaa6e1802755330ca6"; // Ersätt med ditt kontrakt
+  const GAS_API = "https://api.owlracle.info/v4/base/gas?apikey=demo";
 
-export async function POST(req) {
   try {
-    const body = await req.json();
-    const { trustedData } = body;
-
-    const validation = await client.validateFrameAction(trustedData.messageBytes);
-
-    if (!validation.valid) {
-      return NextResponse.json(
-        { error: "Ogiltig Frame-signatur" },
-        { status: 403 }
-      );
+    // Knapp 1: Visa live gaspris
+    if (untrustedData.buttonIndex === 1) {
+      const gasData = await fetch(GAS_API).then(res => res.json());
+      const gwei = gasData.speeds[1].estimatedFee.toFixed(1);
+      
+      return res.json({
+        type: 'message',
+        message: `⚡ ${gwei} Gwei på Base ${gwei < 30 ? '😎' : '🔥'}`
+      });
     }
 
-    const { fid } = validation.action.interactor;
-
-    return NextResponse.json({
-      status: "success",
-      frame: {
-        version: "vNext",
-        image: `${process.env.NEXT_PUBLIC_BASE_URL}/api/og?fid=${fid}`,
-        post_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
-        buttons: [
-          {
-            label: "Visa min XP",
-            action: "post"
-          },
-          {
-            label: "Dela statistik",
-            action: "post_redirect"
-          }
-        ],
-        input: {
-          text: "Ange wallet-adress"
+    // Knapp 2: Claim WARP
+    if (untrustedData.buttonIndex === 2) {
+      return res.json({
+        type: 'tx',
+        chainId: 'eip155:8453', // Base
+        method: 'eth_sendTransaction',
+        params: {
+          to: CONTRACT_ADDRESS,
+          data: '0x9e281a98', // claimDaily() function selector
+          value: '0x0' // No ETH needed
         }
-      }
-    });
+      });
+    }
+
   } catch (error) {
-    console.error("Frame Action Error:", error);
-    return NextResponse.json(
-      { error: "Internt serverfel" },
-      { status: 500 }
-    );
+    console.error("Frame error:", error);
+    return res.status(500).json({ error: "Något gick fel" });
   }
-}
+};
