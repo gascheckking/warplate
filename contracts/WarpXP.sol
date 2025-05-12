@@ -1,15 +1,7 @@
-
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract WarpXP {
-    mapping(address => uint256) public xp;
-
-    function claimXP() public {
-        xp[msg.sender] += 100;
-    }
-
-    function getXP(address user) public view returns (uint256) {
-        return xp[user];
-    }
+function getRewardTier(address user) public view returns (uint256) {
+  uint256 userXp = xp[user];
+  if (userXp >= 1000) return 3; // Diamond
+  if (userXp >= 500) return 2;  // Gold
+  if (userXp >= 100) return 1;  // Silver
+  return 0;                     // Bronze
 }
