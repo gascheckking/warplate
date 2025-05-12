@@ -1,5 +1,19 @@
+/* Ny gasmätarstyling */
+.gas-card {
+  max-width: 300px; /* Mindre storlek */
+  margin: 0 auto;   /* Centrera */
+}
 
-body { background: #0d1117; color: white; font-family: sans-serif; padding: 20px; }
-button { padding: 10px 15px; margin: 10px; border-radius: 5px; border: none; background: #00ff88; color: #000; cursor: pointer; }
-.gas-progress { height: 8px; background: #333; margin-top: 10px; width: 100%; border-radius: 4px; }
-#gasProgress { background: linear-gradient(to right, #00ff88, #0099ff); height: 8px; width: 0%; border-radius: 4px; }
+.gas-bar {
+  height: 8px !important; /* Tunnare */
+  background: #1a2b3c !important; /* Mörkblå bakgrund */
+}
+
+.gas-fill {
+  background: linear-gradient(90deg, #00ff88 0%, #00a3ff 100%) !important; /* Grön → Blå gradient */
+  height: 8px !important;
+}
+
+.gas-labels span {
+  font-size: 0.8rem; /* Mindre text */
+}
