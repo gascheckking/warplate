@@ -1,0 +1,1 @@
+export const LANG = { en: { title: 'Warp AI' }, sv: { title: 'Warp AI (SV)' } };

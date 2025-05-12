@@ -1,0 +1,5 @@
+
+body { background: #0d1117; color: white; font-family: sans-serif; padding: 20px; }
+button { padding: 10px 15px; margin: 10px; border-radius: 5px; border: none; background: #00ff88; color: #000; cursor: pointer; }
+.gas-progress { height: 8px; background: #333; margin-top: 10px; width: 100%; border-radius: 4px; }
+#gasProgress { background: linear-gradient(to right, #00ff88, #0099ff); height: 8px; width: 0%; border-radius: 4px; }
