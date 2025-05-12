@@ -1,20 +1,21 @@
-// api/frame-action.js
 export default async (req, res) => {
   const { untrustedData } = req.body;
 
-  // Base Network config
-  const CONTRACT_ADDRESS = "0x8ab57bdfc4e900b62f309bfaa6e1802755330ca6"; // Ersätt med ditt kontrakt
-  const GAS_API = "https://api.owlracle.info/v4/base/gas?apikey=demo";
+  // Validera Farcaster Frame Data
+  if (!untrustedData?.fid) {
+    return res.status(400).json({ error: "Ogiltig Frame-förfrågan" });
+  }
+
+  // Base Network Config
+  const CONTRACT_ADDRESS = "0xYOUR_DEPLOYED_CONTRACT"; // Ersätt här
+  const WARP_CLAIM_SELECTOR = "0x9e281a98"; // claimDaily() function selector
 
   try {
-    // Knapp 1: Visa live gaspris
+    // Knapp 1: Visa gaspris
     if (untrustedData.buttonIndex === 1) {
-      const gasData = await fetch(GAS_API).then(res => res.json());
-      const gwei = gasData.speeds[1].estimatedFee.toFixed(1);
-      
       return res.json({
         type: 'message',
-        message: `⚡ ${gwei} Gwei på Base ${gwei < 30 ? '😎' : '🔥'}`
+        message: '⚡ Visa gaspriser på warpsi.xyz' // Länka till din huvudsida
       });
     }
 
@@ -25,15 +26,22 @@ export default async (req, res) => {
         chainId: 'eip155:8453', // Base
         method: 'eth_sendTransaction',
         params: {
+          abi: [{ 
+            "inputs": [],
+            "name": "claimDaily",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }],
           to: CONTRACT_ADDRESS,
-          data: '0x9e281a98', // claimDaily() function selector
-          value: '0x0' // No ETH needed
+          data: WARP_CLAIM_SELECTOR,
+          value: '0'
         }
       });
     }
 
   } catch (error) {
     console.error("Frame error:", error);
-    return res.status(500).json({ error: "Något gick fel" });
+    return res.status(500).json({ error: "Serverfel" });
   }
 };
