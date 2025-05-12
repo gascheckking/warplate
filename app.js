@@ -1,76 +1,70 @@
+import Web3 from 'web3';
+import { getGas } from './gas.js';
+import { updateLanguage } from './lang.js';
 
-let provider, signer;
+const WarpXPABI = [/* Din ABI här */];
+const CONTRACT_ADDRESS = "0xYOUR_WARPXP_ADDRESS_HERE";
 
-const connectWalletBtn = document.getElementById('connectWallet');
-const xpDisplay = document.getElementById('xpDisplay');
-const gasProgress = document.getElementById('gasProgress');
-const gasValue = document.getElementById('gasValue');
+let web3, contract, userAddress;
 
-connectWalletBtn.addEventListener('click', connectWallet);
-
-async function connectWallet() {
-  if (!window.ethereum) return alert('Installera MetaMask!');
+// Förbättrad wallet-koppling
+document.getElementById('connect-wallet').addEventListener('click', async () => {
   try {
-    connectWalletBtn.disabled = true;
-    connectWalletBtn.textContent = 'Ansluter...';
-
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-
-    const address = await signer.getAddress();
-    connectWalletBtn.textContent = `${address.slice(0,6)}...${address.slice(-4)}`;
-    localStorage.setItem('connectedWallet', address);
-
-    await loadOnchainData();
-    startGasUpdates();
-  } catch (err) {
-    alert('Något gick fel: ' + err.message);
-  } finally {
-    connectWalletBtn.disabled = false;
-  }
-}
-
-async function loadOnchainData() {
-  try {
-    const contract = new ethers.Contract("0xYOUR_CONTRACT_ADDRESS", ["function xp(address) view returns (uint256)"], provider);
-    const xp = await contract.xp(await signer.getAddress());
-    xpDisplay.textContent = `${xp} XP 🔥`;
-  } catch (err) {
-    console.error('XP Error:', err);
-  }
-}
-
-function startGasUpdates() {
-  async function updateGas() {
-    try {
-      const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-      const data = await res.json();
-      const avgGas = data.speeds[1].estimatedFee;
-      gasProgress.style.width = `${Math.min(avgGas, 100)}%`;
-      gasValue.textContent = `${avgGas.toFixed(1)} Gwei`;
-    } catch {
-      gasValue.textContent = 'Kunde inte hämta';
-    }
-  }
-  updateGas();
-  setInterval(updateGas, 30000);
-}
-
-document.getElementById('buyPremium').addEventListener('click', async () => {
-  if (!signer) return alert('Koppla plånbok först!');
-  try {
-    const tx = await signer.sendTransaction({
-      to: "0xPremiumContractAddress",
-      value: ethers.utils.parseEther("0.009")
+    if (!window.ethereum) throw new Error('Install MetaMask');
+    
+    const accounts = await window.ethereum.request({ 
+      method: 'eth_requestAccounts' 
     });
-    alert(`Premium köpt! TX: ${tx.hash}`);
-    await loadOnchainData();
-  } catch (err) {
-    alert('Köp misslyckades: ' + err.message);
+    
+    web3 = new Web3(window.ethereum);
+    userAddress = accounts[0];
+    
+    // Network check
+    const chainId = await web3.eth.getChainId();
+    if (chainId !== 8453) {
+      alert('Switch to Base Network');
+      return;
+    }
+
+    // Initiera kontrakt
+    contract = new web3.eth.Contract(WarpXPABI, CONTRACT_ADDRESS);
+    
+    // Uppdatera UI
+    document.getElementById('wallet-address').textContent = 
+      `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+    document.getElementById('wallet-section').classList.remove('hidden');
+    
+    await fetchXP();
+    
+  } catch (error) {
+    console.error('Wallet Error:', error);
+    alert(`Error: ${error.message}`);
   }
 });
 
-window.addEventListener('load', async () => {
-  if(localStorage.getItem('connectedWallet')) await connectWallet();
+// Förbättrad XP-hämtning
+async function fetchXP() {
+  try {
+    const xp = await contract.methods.xp(userAddress).call();
+    document.getElementById('xp-counter').textContent = xp;
+  } catch (error) {
+    console.error('XP Error:', error);
+    document.getElementById('xp-counter').textContent = 'Error';
+  }
+}
+
+// Initiera
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item, .tab-content').forEach(el => {
+      el.classList.remove('active');
+    });
+    item.classList.add('active');
+    document.getElementById(item.dataset.tab).classList.add('active');
+  });
 });
+
+// Starta
+getGas();
+setInterval(getGas, 30000);
+updateLanguage('en'); // Default språk
