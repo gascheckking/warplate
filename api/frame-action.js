@@ -6,13 +6,11 @@ const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY);
 
 export async function POST(req) {
   try {
-    // Validera Frame-förfrågan
     const body = await req.json();
     const { trustedData } = body;
-    
-    // Verifiera signatur med Neynar
+
     const validation = await client.validateFrameAction(trustedData.messageBytes);
-    
+
     if (!validation.valid) {
       return NextResponse.json(
         { error: "Ogiltig Frame-signatur" },
@@ -20,10 +18,8 @@ export async function POST(req) {
       );
     }
 
-    // Hämta användardata från valideringen
     const { fid } = validation.action.interactor;
-    
-    // Generera dynamiskt svar
+
     return NextResponse.json({
       status: "success",
       frame: {
@@ -45,7 +41,6 @@ export async function POST(req) {
         }
       }
     });
-
   } catch (error) {
     console.error("Frame Action Error:", error);
     return NextResponse.json(
