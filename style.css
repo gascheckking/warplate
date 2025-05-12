@@ -1,39 +1,90 @@
-/* Ny gasmätarstyling */
-.gas-card {
-  max-width: 300px; /* Mindre storlek */
-  margin: 0 auto;   /* Centrera */
+:root {
+  --primary: #00c9a7;  /* Modern turkos */
+  --secondary: #845ec2; /* Lila accent */
+  --bg: #0f0f15;       /* Mörkare bakgrund */
+}
+
+/* Base Styles */
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Kompakt gasmätare */
+.gas-meter-compact {
+  width: 220px;
+  margin: 0 auto;
 }
 
 .gas-bar {
-  height: 8px !important; /* Tunnare */
-  background: #1a2b3c !important; /* Mörkblå bakgrund */
+  height: 6px;
+  background: #2d2d3d;
+  border-radius: 3px;
 }
 
 .gas-fill {
-  background: linear-gradient(90deg, #00ff88 0%, #00a3ff 100%) !important; /* Grön → Blå gradient */
-  height: 8px !important;
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
-.gas-labels span {
-  font-size: 0.8rem; /* Mindre text */
+.gas-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.9rem;
 }
+
+/* Aktivitetflöde */
+.activity-item {
+  display: flex;
+  gap: 15px;
+  padding: 12px;
+  background: #1a1a24;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  padding-top: 4px;
+}
+
+/* Mobiloptimering */
 @media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr !important; /* En kolumn på mobil */
-    padding: 10px;
-  }
-
   .nav {
-    overflow-x: auto; /* Scrollbar för flikar */
-    -webkit-overflow-scrolling: touch;
+    padding: 8px 0;
+    font-size: 0.9rem;
   }
 
-  .card {
-    margin: 10px 0;
-    padding: 15px;
+  .nav-item {
+    padding: 8px 12px;
   }
 
-  .gas-card h2 {
-    font-size: 1.2rem; /* Mindre rubrik */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0 10px;
   }
+
+  .gas-meter-compact {
+    width: 100%;
+  }
+}
+
+/* Premium CTA */
+.premium-cta {
+  background: linear-gradient(45deg, var(--secondary), var(--primary));
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.premium-cta:hover {
+  transform: scale(1.05);
 }
