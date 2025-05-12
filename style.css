@@ -1,90 +1,28 @@
-:root {
-  --primary: #00c9a7;  /* Modern turkos */
-  --secondary: #845ec2; /* Lila accent */
-  --bg: #0f0f15;       /* Mörkare bakgrund */
-}
-
-/* Base Styles */
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-/* Kompakt gasmätare */
-.gas-meter-compact {
-  width: 220px;
-  margin: 0 auto;
+/* style.css */
+.gas-meter {
+  width: 250px;
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 12px;
 }
 
 .gas-bar {
-  height: 6px;
-  background: #2d2d3d;
-  border-radius: 3px;
+  height: 8px;
+  background: #2d2d2d;
+  border-radius: 4px;
 }
 
 .gas-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  border-radius: 3px;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, #00c9a7, #0066ff);
+  border-radius: 4px;
+  transition: width 0.5s ease;
 }
 
-.gas-info {
+.gas-labels {
   display: flex;
   justify-content: space-between;
-  margin-top: 8px;
-  font-size: 0.9rem;
-}
-
-/* Aktivitetflöde */
-.activity-item {
-  display: flex;
-  gap: 15px;
-  padding: 12px;
-  background: #1a1a24;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.activity-icon {
-  font-size: 1.5rem;
-  padding-top: 4px;
-}
-
-/* Mobiloptimering */
-@media (max-width: 768px) {
-  .nav {
-    padding: 8px 0;
-    font-size: 0.9rem;
-  }
-
-  .nav-item {
-    padding: 8px 12px;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 0 10px;
-  }
-
-  .gas-meter-compact {
-    width: 100%;
-  }
-}
-
-/* Premium CTA */
-.premium-cta {
-  background: linear-gradient(45deg, var(--secondary), var(--primary));
-  border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.premium-cta:hover {
-  transform: scale(1.05);
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #888;
 }
