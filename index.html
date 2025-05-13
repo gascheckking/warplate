@@ -1,156 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WarpAI | Onchain Activity</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
-    body {
-      background-color: #0d0d0d;
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      margin: 0 auto;
-      padding-bottom: 80px;
-      max-width: 430px;
+    :root {
+      --primary: #6E6EDE;
+      --bg: #0d0d0d;
+      --text: #fff;
     }
-
-    h1, h2, h3 { margin: 0.2em 0; }
-    p { margin: 0.2em 0; opacity: 0.85; }
-
+    body {
+      background: var(--bg);
+      color: var(--text);
+      max-width: 375px;
+      margin: 0 auto;
+      padding: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+    .top-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .top-logo img {
+      height: 48px;
+    }
+    .mini-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .mini-buttons button {
+      flex: 1;
+      margin: 0 4px;
+      background: #1f1f1f;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: white;
+    }
     .card {
       background: #1a1a1a;
       border-radius: 12px;
-      padding: 12px 16px;
-      margin: 12px 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      padding: 12px;
+      margin-bottom: 12px;
     }
-
-    .gas-bar {
+    .gas-meter {
       height: 8px;
       background: #333;
-      border-radius: 6px;
+      border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
+      margin: 8px 0;
     }
-
-    .gas-fill {
+    #gas-fill {
       height: 100%;
-      background: linear-gradient(to right, #10B981, #F59E0B);
-      width: 45%;
+      background: linear-gradient(90deg, #10B981, #F59E0B);
+      transition: width 0.3s;
     }
-
+    .emoji-badge {
+      font-size: 1.3rem;
+      margin-right: 8px;
+    }
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      max-width: 430px;
-      margin: 0 auto;
       background: #121212;
-      border-top: 1px solid #222;
       display: flex;
       justify-content: space-around;
-      padding: 8px 0;
+      padding: 10px 0;
+      max-width: 375px;
+      margin: 0 auto;
+      border-top: 1px solid #333;
     }
-
     .bottom-nav button {
-      all: unset;
-      text-align: center;
-      color: #aaa;
+      background: none;
+      border: none;
+      color: var(--text);
       font-size: 0.8rem;
-    }
-
-    .bottom-nav button.active {
-      color: #fff;
-    }
-
-    .bottom-nav span {
-      font-size: 1.3rem;
-    }
-
-    .header {
-      text-align: center;
-      padding: 20px 0 10px;
-    }
-
-    .input-wrap {
       display: flex;
-      gap: 6px;
-      margin-top: 8px;
+      flex-direction: column;
+      align-items: center;
     }
-
-    input {
-      flex: 1;
+    .bottom-nav button.active {
+      color: var(--primary);
     }
-
   </style>
 </head>
 <body>
-  <header class="header">
-    <h1>WarpAI</h1>
-    <p style="opacity: 0.6;">Onchain Activity Tracker</p>
-  </header>
+  <div class="top-logo">
+    <img src="https://og.warpai.xyz/gas?t=20250513" alt="WarpAI logo">
+    <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">Track your life onchain</p>
+  </div>
 
-  <!-- Gas -->
-  <section class="card">
-    <h3>⛽ Base Gas</h3>
-    <p>Current gas prices and mood</p>
-    <div class="gas-bar">
-      <div class="gas-fill" id="gas-fill"></div>
+  <div class="mini-buttons">
+    <button onclick="connectWallet()">👛 Wallet</button>
+    <button onclick="claim()">🎁 Claim</button>
+    <button onclick="trackAddress()">📍 Track</button>
+  </div>
+
+  <div class="card">
+    <h4>⛽ Base Gas</h4>
+    <div class="gas-meter"><div id="gas-fill"></div></div>
+    <div style="display: flex; align-items: center;">
+      <span id="gas-mood" class="emoji-badge">😎</span>
+      <div>
+        <p id="gas-price" style="margin: 0;">Loading...</p>
+        <small id="gas-time" style="opacity: 0.7;">--</small>
+      </div>
     </div>
-    <p style="margin-top: 4px;">
-      <span id="gas-mood">😎</span> 
-      <span id="gas-value">Loading gas data...</span>
-    </p>
-  </section>
+  </div>
 
-  <!-- Rewards -->
-  <section class="card">
-    <h3>🎁 Daily Rewards</h3>
-    <p>Claim your daily WARP</p>
-    <button id="claim-btn">Connect Wallet</button>
-    <p style="font-size: 0.8rem; margin-top: 6px;">
-      🔥 Streak: <span id="streak">0</span> | ⚡ XP: <span id="xp">0</span>
-    </p>
-  </section>
+  <div class="card">
+    <h4>🔥 Activity</h4>
+    <p>Streak: <span id="streak">1</span> days | XP: <span id="xp">100</span></p>
+  </div>
 
-  <!-- Tracker -->
-  <section class="card">
-    <h3>🔭 Track Address</h3>
-    <p>Monitor any Base wallet</p>
-    <div class="input-wrap">
-      <input id="track-input" placeholder="0x...">
-      <button id="track-btn">Add</button>
-    </div>
-  </section>
-
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav">
-    <button class="active"><span>🏠</span><br>Home</button>
-    <button><span>👤</span><br>Profile</button>
-    <button><span>🏆</span><br>Leaderboard</button>
-    <button><span>👥</span><br>Referrals</button>
-    <button><span>☰</span><br>Menu</button>
-  </nav>
+  <div class="bottom-nav">
+    <button class="active"><span>🏠</span><small>Home</small></button>
+    <button><span>📊</span><small>Stats</small></button>
+    <button><span>🏆</span><small>Leaders</small></button>
+    <button><span>⚙️</span><small>Settings</small></button>
+  </div>
 
   <script>
     async function updateGas() {
       try {
         const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
         const data = await res.json();
-        const fast = data.speeds[1].estimatedFee.toFixed(1);
-        document.getElementById('gas-value').textContent = `Fast: ${fast} Gwei`;
-        let mood = '😎';
-        if (fast > 40) mood = '🔥';
-        if (fast > 70) mood = '💀';
-        document.getElementById('gas-mood').textContent = mood;
-        document.getElementById('gas-fill').style.width = `${Math.min(fast, 100)}%`;
+        const gwei = data.speeds[1].estimatedFee.toFixed(1);
+        document.getElementById('gas-price').textContent = `${gwei} Gwei`;
+        document.getElementById('gas-fill').style.width = `${Math.min(gwei, 100)}%`;
+        document.getElementById('gas-mood').textContent = gwei < 30 ? '😎' : gwei < 70 ? '🔥' : '💀';
+        document.getElementById('gas-time').textContent = new Date().toLocaleTimeString();
       } catch (err) {
-        document.getElementById('gas-value').textContent = 'Error loading';
+        document.getElementById('gas-price').textContent = 'Error';
       }
     }
-
     updateGas();
     setInterval(updateGas, 30000);
   </script>
