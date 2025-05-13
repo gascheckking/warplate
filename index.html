@@ -2,31 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WarpAI | Onchain Activity Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
+    :root {
+      --primary: #6E6EDE;
+      --primary-hover: #7E7EEE;
+      --card-bg: #1a1a1a;
+      --bg: #0d0d0d;
+      --text: #ffffff;
+    }
+
     body {
-      background: #0d0d0d;
-      color: white;
+      background: var(--bg);
+      color: var(--text);
       max-width: 420px;
       margin: 0 auto;
       padding-bottom: 80px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', system-ui;
     }
 
-    .tab {
-      display: none;
+    .tab { display: none; }
+    .tab.active { display: block; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid #333;
+      max-width: 420px;
+      margin: 0 auto;
     }
-    .tab.active {
-      display: block;
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
     }
+
+    .bottom-nav button.active { color: var(--primary); }
 
     .gas-meter {
-      height: 10px;
+      height: 8px;
       background: #333;
       border-radius: 6px;
-      margin: 12px 0;
+      margin: 8px 0;
       overflow: hidden;
     }
 
@@ -36,30 +67,27 @@
       transition: width 0.3s;
     }
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #1a1a1a;
-      border-top: 1px solid #333;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
+    .emoji-badge {
+      font-size: 1.2rem;
+      margin-right: 8px;
     }
 
-    .bottom-nav button {
-      background: none;
-      border: none;
-      color: #aaa;
+    .card hgroup h3 {
+      font-size: 1rem;
+    }
+
+    .card hgroup p {
+      font-size: 0.8rem;
+    }
+
+    #gas-price {
       font-size: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin: 0;
     }
 
-    .bottom-nav button.active {
-      color: #6E6EDE;
+    #gas-time {
+      font-size: 0.75rem;
+      opacity: 0.6;
     }
   </style>
 </head>
@@ -67,74 +95,46 @@
   <main class="container">
     <header style="text-align: center; padding: 16px 0;">
       <h1>WarpAI</h1>
-      <p style="opacity: 0.7;">Onchain Activity Tracker</p>
+      <p style="margin-top: -8px; font-size: 0.9rem; opacity: 0.75;">Onchain Activity Tracker</p>
     </header>
 
     <section id="home" class="tab active">
       <article class="card">
-        <h3>⛽ Base Network Gas</h3>
-        <p>Current gas prices and recommendations</p>
-        <div class="gas-meter">
-          <div id="gas-fill"></div>
-        </div>
-        <div style="display:flex; align-items: center; gap:12px;">
-          <span id="gas-mood" style="font-size: 1.5rem;">😎</span>
-          <p id="gas-price">Loading...</p>
+        <hgroup>
+          <h3>⛽ Base Network Gas</h3>
+          <p>Current gas prices and recommendations</p>
+        </hgroup>
+        <div class="gas-meter"><div id="gas-fill"></div></div>
+        <div style="display: flex; align-items: center;">
+          <span id="gas-mood" class="emoji-badge">😎</span>
+          <div>
+            <p id="gas-price">Loading...</p>
+            <small id="gas-time">—</small>
+          </div>
         </div>
       </article>
     </section>
 
-    <section id="activity" class="tab">
-      <h3 style="padding-left:16px;">📊 Activity</h3>
-      <p style="padding:0 16px;">Your latest onchain actions</p>
-    </section>
-
-    <section id="leaderboard" class="tab">
-      <h3 style="padding-left:16px;">🏆 Leaderboard</h3>
-      <p style="padding:0 16px;">Top users by XP and claims</p>
-    </section>
-
-    <section id="profile" class="tab">
-      <h3 style="padding-left:16px;">👤 Profile</h3>
-      <p style="padding:0 16px;">Wallet, WARP and XP overview</p>
-    </section>
+    <section id="activity" class="tab"><h3 style="padding: 16px;">Activity</h3></section>
+    <section id="leaderboard" class="tab"><h3 style="padding: 16px;">Top Wallets</h3></section>
+    <section id="profile" class="tab"><h3 style="padding: 16px;">Profile</h3></section>
   </main>
 
   <nav class="bottom-nav">
-    <button onclick="switchTab('home')" class="active">🏠<small>Home</small></button>
-    <button onclick="switchTab('activity')">📊<small>Activity</small></button>
-    <button onclick="switchTab('leaderboard')">🏆<small>Top</small></button>
-    <button onclick="switchTab('profile')">👤<small>Me</small></button>
+    <button onclick="switchTab('home')" class="active"><span>🏠</span><small>Home</small></button>
+    <button onclick="switchTab('activity')"><span>📊</span><small>Activity</small></button>
+    <button onclick="switchTab('leaderboard')"><span>🏆</span><small>Top</small></button>
+    <button onclick="switchTab('profile')"><span>👤</span><small>Me</small></button>
   </nav>
 
+  <script src="gas.js"></script>
   <script>
-    function switchTab(id) {
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-
-      document.querySelectorAll('.bottom-nav button').forEach(btn => {
-        btn.classList.remove('active');
-      });
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
       event.currentTarget.classList.add('active');
     }
-
-    async function updateGas() {
-      try {
-        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-        const data = await res.json();
-        const gwei = data.speeds[1].estimatedFee.toFixed(1);
-        document.getElementById('gas-price').textContent = `${gwei} Gwei`;
-        document.getElementById('gas-fill').style.width = `${Math.min(gwei,100)}%`;
-        document.getElementById('gas-mood').textContent = gwei < 30 ? '😎' : gwei < 70 ? '🔥' : '💀';
-      } catch (err) {
-        console.error("Gas update failed", err);
-      }
-    }
-
-    updateGas();
-    setInterval(updateGas, 30000);
   </script>
 </body>
 </html>
