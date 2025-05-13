@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WarpAI</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
@@ -23,32 +23,33 @@
       padding: 0;
       max-width: 420px;
       margin: auto;
+      overflow-x: hidden;
     }
 
     header {
       text-align: center;
-      padding: 24px 12px 16px 12px;
+      padding: 16px 12px 12px 12px;
     }
 
     #brand {
       text-align: left;
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: 700;
+      font-size: 1.1rem;
       color: var(--primary);
       padding-left: 16px;
     }
 
     #main-title {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      margin: 0;
+      margin: 4px 0 2px;
       text-align: center;
     }
 
     #subtitle {
-      font-size: 0.9rem;
-      color: #888;
-      margin: 0 0 16px 0;
+      font-size: 0.75rem;
+      color: #aaa;
+      margin: 0;
       text-align: center;
     }
 
@@ -56,16 +57,16 @@
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      padding: 0 12px;
-      margin-bottom: 16px;
+      padding: 8px 12px;
     }
 
     .card {
       background: var(--card);
       border-radius: 12px;
-      padding: 16px;
+      padding: 12px;
       flex: 1;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      text-align: center;
     }
 
     .mini-row {
@@ -79,15 +80,15 @@
     .statbox {
       background: var(--card);
       border-radius: 10px;
-      padding: 10px;
+      padding: 8px;
       flex: 1;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
 
     .stat-title {
       font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 4px;
+      font-size: 0.75rem;
+      margin-bottom: 2px;
     }
 
     .meter {
@@ -96,7 +97,6 @@
       background: #333;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
     }
 
     .meter > div {
@@ -106,9 +106,10 @@
 
     .overview {
       background: var(--card);
-      margin: 0 12px 20px;
+      margin: 0 12px 80px;
       border-radius: 12px;
-      padding: 16px;
+      padding: 12px;
+      font-size: 0.85rem;
     }
 
     nav {
@@ -128,8 +129,13 @@
     nav a {
       color: #ccc;
       text-decoration: none;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-align: center;
+    }
+
+    nav a.active {
+      color: var(--primary);
+      font-weight: 600;
     }
   </style>
 </head>
@@ -148,15 +154,15 @@
 
   <div class="mini-row">
     <div class="statbox">
-      <div class="stat-title">⛽ Gas<br><small>Fast: --</small></div>
+      <div class="stat-title">⛽ GAS / FI<br><small>Fast: --</small></div>
       <div class="meter"><div style="width:30%;background:linear-gradient(to right,green,yellow)"></div></div>
     </div>
     <div class="statbox">
-      <div class="stat-title">🎯 XP<br><small>Streak: 3d | XP: 120</small></div>
+      <div class="stat-title">🎯 XP<br><small>3d | 120 XP</small></div>
       <div class="meter"><div style="width:25%;background:linear-gradient(to right,red,orange)"></div></div>
     </div>
     <div class="statbox">
-      <div class="stat-title">🔍 Activity<br><small>Latest: 6 tx</small></div>
+      <div class="stat-title">🔍 Activity<br><small>6 tx</small></div>
     </div>
   </div>
 
@@ -166,7 +172,7 @@
   </div>
 
   <nav>
-    <a href="#">🏠<br>Home</a>
+    <a href="#" class="active">🏠<br>Home</a>
     <a href="#">📈<br>Track</a>
     <a href="#">🏆<br>Leader</a>
     <a href="#">👤<br>Profile</a>
