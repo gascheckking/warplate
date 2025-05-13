@@ -19,87 +19,98 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
+      margin: 0 auto;
       max-width: 420px;
-      margin: auto;
-      overflow-x: hidden;
+      padding: 0 12px;
     }
 
     header {
       text-align: center;
-      padding: 24px 12px 16px 12px;
+      padding: 20px 0 10px;
     }
 
     #brand {
-      text-align: left;
       font-weight: 700;
-      font-size: 1.1rem;
       color: var(--primary);
-      padding-left: 16px;
+      margin-bottom: 4px;
+      font-size: 1.1rem;
     }
 
-    #main-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin: 0;
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ccc;
+      margin-bottom: 6px;
     }
 
-    #subtitle {
-      font-size: 0.85rem;
-      color: #aaa;
-      margin: 0 0 12px 0;
+    p {
+      font-size: 0.75rem;
+      color: #777;
+      margin-top: 0;
     }
 
-    .card-row, .mini-row {
-      display: flex;
-      justify-content: space-between;
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      padding: 0 12px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .card {
+    .action-card {
       background: var(--card);
       border-radius: 12px;
-      padding: 10px;
-      flex: 1;
+      padding: 10px 8px;
       text-align: center;
-      font-size: 0.8rem;
     }
 
-    .statbox {
-      background: var(--card);
-      border-radius: 10px;
-      padding: 10px;
-      flex: 1;
+    .action-card div:first-child {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .action-card strong {
       font-size: 0.7rem;
     }
 
-    .stat-title {
-      font-weight: 600;
-      font-size: 0.75rem;
-    }
-
-    .meter {
-      width: 100%;
-      height: 6px;
-      background: #333;
-      border-radius: 4px;
-      overflow: hidden;
+    .metric-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       margin-top: 6px;
     }
 
-    .meter > div {
+    .metric {
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 0.7rem;
+    }
+
+    .metric-title {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      margin-bottom: 3px;
+    }
+
+    .progress {
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
       height: 100%;
-      transition: width 0.3s ease-in-out;
+      transition: width 0.3s ease;
     }
 
     .overview {
       background: var(--card);
-      margin: 0 12px 80px;
       border-radius: 12px;
       padding: 14px;
+      margin: 10px 0 80px;
       font-size: 0.8rem;
     }
 
@@ -109,57 +120,88 @@
       left: 0;
       right: 0;
       max-width: 420px;
-      margin: auto;
+      margin: 0 auto;
       display: flex;
       justify-content: space-around;
-      background: #000;
-      padding: 10px 0;
+      background: var(--bg);
+      padding: 12px 0;
       border-top: 1px solid #222;
     }
 
     nav a {
-      color: #ccc;
+      color: #666;
       text-decoration: none;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-align: center;
+      transition: color 0.2s ease;
+    }
+
+    nav a.active {
+      color: var(--primary);
     }
   </style>
 </head>
 <body>
   <header>
     <div id="brand">WarpAI</div>
-    <h1 id="main-title">Onchain Activity Tracker</h1>
-    <p id="subtitle">Track your life on-chain</p>
+    <h1>Onchain Activity</h1>
+    <p>Track your life on-chain</p>
   </header>
 
-  <div class="card-row">
-    <div class="card">👛<br><strong>Wallet</strong></div>
-    <div class="card">🎁<br><strong>Claim</strong></div>
-    <div class="card">📍<br><strong>Track</strong></div>
-  </div>
+  <div class="dashboard">
+    <!-- Wallet Section -->
+    <div class="action-card">
+      <div>👛</div>
+      <strong>Wallet</strong>
+      <div class="metric-group">
+        <div class="metric">
+          <div class="metric-title">⛽ Gas / Fee</div>
+          <div class="progress">
+            <div class="progress-bar" style="width: 30%; background: linear-gradient(90deg, #10B981, #F59E0B, #EF4444)"></div>
+          </div>
+          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;">Fast: 12 Gwei</div>
+        </div>
+      </div>
+    </div>
 
-  <div class="mini-row">
-    <div class="statbox">
-      <div class="stat-title">⛽ GAS / FEE<br><small>Fast: --</small></div>
-      <div class="meter"><div style="width:30%;background:linear-gradient(to right,green,yellow)"></div></div>
+    <!-- Claim Section -->
+    <div class="action-card">
+      <div>🎁</div>
+      <strong>Claim</strong>
+      <div class="metric-group">
+        <div class="metric">
+          <div class="metric-title">🎯 XP Streak</div>
+          <div class="progress">
+            <div class="progress-bar" style="width: 25%; background: linear-gradient(90deg, #EF4444, #F59E0B, #7A5FFF)"></div>
+          </div>
+          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;">3d | 120 XP</div>
+        </div>
+      </div>
     </div>
-    <div class="statbox">
-      <div class="stat-title">🎯 XP<br><small>3d | 120 XP</small></div>
-      <div class="meter"><div style="width:25%;background:linear-gradient(to right,red,orange)"></div></div>
-    </div>
-    <div class="statbox">
-      <div class="stat-title">🔍 Activity<br><small>6 tx</small></div>
-      <div class="meter"><div style="width:40%;background:linear-gradient(to right,blue,cyan)"></div></div>
+
+    <!-- Track Section -->
+    <div class="action-card">
+      <div>📍</div>
+      <strong>Track</strong>
+      <div class="metric-group">
+        <div class="metric">
+          <div class="metric-title">🔍 Activity</div>
+          <div class="progress">
+            <div class="progress-bar" style="width: 40%; background: linear-gradient(90deg, #3B82F6, #06B6D4)"></div>
+          </div>
+          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;">6 transactions</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="overview">
     <h3>📊 Overview</h3>
-    <p>This box will change content depending on tab (Track, Leader, etc).</p>
+    <p>This box will change content depending on tab selection.</p>
   </div>
 
   <nav>
-    <a href="#">🏠<br>Home</a>
+    <a href="#" class="active">🏠<br>Home</a>
     <a href="#">📈<br>Track</a>
     <a href="#">🏆<br>Leader</a>
     <a href="#">👤<br>Profile</a>
