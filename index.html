@@ -7,164 +7,175 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
     :root {
-      --primary: #6E6EDE;
-      --primary-hover: #7E7EEE;
-      --bg: #0d0d0d;
-      --card-bg: #1a1a1a;
+      --primary: #7C3AED;
+      --bg: #0a0a0a;
+      --card-bg: #141414;
       --text: #ffffff;
     }
 
-    html, body {
-      background: var(--bg);
+    body {
+      background-color: var(--bg);
       color: var(--text);
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
       max-width: 420px;
-      margin-inline: auto;
-      overflow-x: hidden;
+      margin: 0 auto;
+      font-family: 'Inter', sans-serif;
+    }
+
+    header, .card, nav {
+      margin: 1rem;
+      border-radius: 1.2rem;
     }
 
     header {
       text-align: center;
-      margin-top: 1.5rem;
+      padding: 1rem 0 0.5rem;
     }
 
-    header img {
-      width: 64px;
-      height: 64px;
+    #warp-logo {
+      width: 56px;
+      height: 56px;
       margin-bottom: 0.5rem;
     }
 
-    h1 {
-      font-size: 1.6rem;
-      margin: 0;
-    }
-
-    p.subtitle {
-      font-size: 0.95rem;
-      opacity: 0.7;
-    }
-
-    .action-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin: 1.5rem 0;
-    }
-
-    .action-buttons button {
-      flex: 1;
-      margin: 0 0.25rem;
-      background-color: var(--card-bg);
-      border: 1px solid #2e2e2e;
-      border-radius: 12px;
-      padding: 0.75rem;
-      color: var(--text);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .info-boxes {
+    .action-row {
       display: flex;
       justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding: 0 1rem;
+      gap: 0.5rem;
+      padding: 0.5rem;
     }
 
-    .info-box {
-      background-color: var(--card-bg);
-      padding: 1rem;
-      border-radius: 12px;
+    .action-row button {
       flex: 1;
-      font-size: 0.85rem;
-    }
-
-    .central-box {
-      background-color: var(--card-bg);
-      margin: 0 1rem;
-      padding: 1.25rem;
       border-radius: 12px;
-      text-align: center;
-      color: #ccc;
     }
 
-    nav.bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-width: 420px;
-      margin-inline: auto;
-      background-color: #111;
+    .mini-card {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #gas-meter {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #10B981, #F59E0B, #EF4444);
+      position: relative;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    #gas-pointer {
+      width: 6px;
+      height: 18px;
+      background: #fff;
+      position: absolute;
+      top: -4px;
+      left: 10%;
+      border-radius: 3px;
+      transition: left 0.3s ease;
+    }
+
+    .activity-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding-top: 0.5rem;
+    }
+
+    nav {
       display: flex;
       justify-content: space-around;
-      padding: 0.65rem 0;
-      border-top: 1px solid #2a2a2a;
+      padding: 0.75rem 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border-top: 1px solid #333;
     }
 
-    nav.bottom-nav button {
+    nav button {
       background: none;
-      border: none;
       color: var(--text);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.2rem;
     }
 
-    nav.bottom-nav button.active {
-      color: var(--primary);
+    #stats {
+      min-height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.8;
+      font-size: 0.9rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="/logo.svg" alt="WarpAI logo" />
-    <h1>WarpAI</h1>
-    <p class="subtitle">Track your life onchain</p>
+    <img src="/logo.png" id="warp-logo" alt="Warp Logo">
+    <h2>WarpAI</h2>
+    <p>Track your life onchain</p>
   </header>
 
-  <div class="action-buttons">
+  <div class="action-row">
     <button>👜 Wallet</button>
     <button>🎁 Claim</button>
     <button>📍 Track</button>
   </div>
 
-  <div class="info-boxes">
-    <div class="info-box">
-      <strong>⛽ Gas</strong>
-      <p id="gas-info">Loading...</p>
+  <div class="mini-card">
+    <strong>⛽ Gas</strong>
+    <div id="gas-meter">
+      <div id="gas-pointer"></div>
     </div>
-    <div class="info-box">
-      <strong>🔥 Activity</strong>
-      <p>Streak: 1d | XP: 100</p>
+    <p id="gas-label" style="font-size: 0.8rem; opacity: 0.7; margin-top: 4px;">Loading...</p>
+  </div>
+
+  <div class="mini-card">
+    <strong>🔥 Activity</strong>
+    <div class="activity-box">
+      <span>Streak: 1d</span>
+      <span>XP: 100</span>
     </div>
   </div>
 
-  <div class="central-box">
-    <h3>📊 Stats</h3>
-    <p>This area updates based on selected tab.</p>
+  <div class="mini-card" id="stats">
+    📊 Stats area — select a tab below
   </div>
 
-  <nav class="bottom-nav">
-    <button class="active">
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-    <button>
-      <span>📈</span>
-      <small>Stats</small>
-    </button>
-    <button>
-      <span>🏆</span>
-      <small>Leaders</small>
-    </button>
-    <button>
-      <span>⚙️</span>
-      <small>Settings</small>
-    </button>
+  <nav>
+    <button>🏠<br>Home</button>
+    <button>📈<br>Stats</button>
+    <button>🏆<br>Leaders</button>
+    <button>⚙️<br>Settings</button>
   </nav>
+
+  <script>
+    const pointer = document.getElementById('gas-pointer');
+    const label = document.getElementById('gas-label');
+
+    async function updateGasMeter() {
+      try {
+        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await res.json();
+        const fee = data.speeds[1].estimatedFee;
+        let left = Math.min(Math.max((fee / 100) * 100, 0), 100);
+        pointer.style.left = `${left}%`;
+        label.textContent = `Base: ${fee.toFixed(1)} Gwei`;
+      } catch (err) {
+        label.textContent = 'Error loading gas';
+      }
+    }
+
+    updateGasMeter();
+    setInterval(updateGasMeter, 30000);
+  </script>
 </body>
 </html>
