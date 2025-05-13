@@ -1,63 +1,119 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI | Live Gas Tracker & WARP Rewards</title>
-  <link rel="stylesheet" href="style.css">
+  <title>WarpAI | Onchain Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    :root {
+      --primary: #6E6EDE;
+      --primary-hover: #7E7EEE;
+      --card-bg: #1a1a1a;
+      --bg: #0d0d0d;
+      --text: #ffffff;
+    }
+    
+    [data-theme="light"] {
+      --card-bg: #f5f5f5;
+      --bg: #ffffff;
+      --text: #121212;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      max-width: 420px;
+      margin: 0 auto;
+      padding-bottom: 80px;
+      font-family: 'Inter', system-ui;
+    }
+    
+    .gas-meter {
+      height: 12px;
+      background: #333;
+      border-radius: 6px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    
+    #gas-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10B981, #F59E0B);
+      transition: width 0.3s;
+    }
+    
+    .emoji-badge {
+      font-size: 1.5rem;
+      margin-right: 12px;
+    }
+    
+    .tab {
+      display: none;
+    }
+    
+    .tab.active {
+      display: block;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid #333;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    
+    .bottom-nav button {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .bottom-nav button.active {
+      color: var(--primary);
+    }
+    
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    #activity-feed {
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Header -->
-    <header class="app-header">
-      <div class="wallet-section">
-        <div class="logo">WarpAI</div>
-        <button id="connect-wallet" class="connect-btn">Connect Wallet</button>
-      </div>
-      <div class="xp-badge">XP: <span id="xp-counter">0</span></div>
+  <main class="container">
+    <header style="text-align: center; padding: 16px 0;">
+      <h1 style="margin-bottom: 0;">WarpAI</h1>
+      <p style="margin-top: 0; opacity: 0.8;">Onchain Activity Tracker</p>
     </header>
 
-    <!-- Gas Tracker Card -->
-    <div class="card">
-      <h2>Base Network Gas</h2>
-      <div class="gas-meter">
-        <div class="gas-progress">
-          <div id="gas-fill" style="width: 0%"></div>
+    <!-- Home Tab -->
+    <section id="home" class="tab active">
+      <article class="card">
+        <hgroup>
+          <h3>⛽ Base Network Gas</h3>
+          <p>Current gas prices and recommendations</p>
+        </hgroup>
+        <div class="gas-meter">
+          <div id="gas-fill"></div>
         </div>
-        <div class="gas-labels">
-          <span>😎 Low</span>
-          <span>💀 High</span>
-        </div>
-      </div>
-      <div class="gas-value">
-        <span id="gas-price">Loading...</span>
-        <span id="gas-mood"></span>
-      </div>
-    </div>
-
-    <!-- Claim Section -->
-    <div class="card claim-section">
-      <h2>Daily WARP Rewards</h2>
-      <button id="claim-btn">🎁 CLAIM 100 WARP</button>
-      <div class="streak-display">
-        🔥 Current Streak: <span id="streak-counter">0</span> days
-      </div>
-    </div>
-
-    <!-- Premium Banner -->
-    <div class="card premium-card">
-      <h3>WarpAI Premium+</h3>
-      <ul class="benefits-list">
-        <li>✅ Gas Price Alerts</li>
-        <li>✅ 2x WARP Rewards</li>
-        <li>✅ Exclusive NFTs</li>
-      </ul>
-      <button class="premium-btn">✨ Upgrade Now</button>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="gas.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+        <div style="display: flex; align-items: center;">
+          <span id="gas-mood" class="emoji-badge">
