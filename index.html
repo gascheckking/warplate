@@ -3,86 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI | Onchain Activity Tracker</title>
+  <title>WarpAI</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
     :root {
-      --primary: #6E6EDE;
-      --card-bg: #1a1a1a;
+      --primary: #7A5FFF;
+      --text: #f1f1f1;
       --bg: #0d0d0d;
-      --text: #ffffff;
+      --card: #1a1a1a;
+      --accent: #10B981;
+      --warning: #F59E0B;
     }
 
     body {
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
-      font-family: 'Inter', system-ui;
+      font-family: 'Inter', sans-serif;
       margin: 0;
-      padding: 1rem;
-      max-width: 480px;
-      margin-inline: auto;
+      padding: 0;
+      max-width: 420px;
+      margin: auto;
     }
 
     header {
       text-align: center;
-      margin-bottom: 1rem;
+      padding: 24px 12px 16px 12px;
     }
 
-    .button-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+    #brand {
+      text-align: left;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary);
+      padding-left: 16px;
     }
 
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .status-pill {
-      flex: 1;
-      padding: 0.6rem;
-      background: #151515;
-      border-radius: 1rem;
-      font-size: 0.75rem;
+    #main-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0;
       text-align: center;
     }
 
-    .status-pill span {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
+    #subtitle {
+      font-size: 0.9rem;
+      color: #888;
+      margin: 0 0 16px 0;
+      text-align: center;
     }
 
-    .gas-meter, .xp-meter {
+    .card-row, .stats-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 12px;
+      margin-bottom: 12px;
+    }
+
+    .card, .statbox {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px;
+      flex: 1;
+    }
+
+    .stat-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .meter {
+      width: 100%;
       height: 6px;
+      background: #333;
       border-radius: 4px;
       overflow: hidden;
-      background: #333;
-      margin-top: 0.3rem;
+      margin-top: 8px;
     }
 
-    .meter-fill {
+    .meter > div {
       height: 100%;
-      transition: width 0.3s ease;
+      transition: width 0.3s ease-in-out;
     }
 
-    .gas-fill {
-      background: linear-gradient(90deg, #10B981, #F59E0B);
-    }
-
-    .xp-fill {
-      background: linear-gradient(90deg, #F43F5E, #F59E0B);
-    }
-
-    .overview-box {
-      background: #151515;
-      padding: 1rem;
-      border-radius: 1rem;
-      margin-top: 1rem;
+    .overview {
+      background: var(--card);
+      margin: 0 12px 20px;
+      border-radius: 12px;
+      padding: 16px;
     }
 
     nav {
@@ -90,87 +99,60 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #0a0a0a;
+      max-width: 420px;
+      margin: auto;
       display: flex;
       justify-content: space-around;
-      padding: 0.7rem 0;
-      border-top: 1px solid #333;
-      max-width: 480px;
-      margin-inline: auto;
+      background: #000;
+      padding: 10px 0;
+      border-top: 1px solid #222;
     }
 
-    nav button {
-      background: none;
-      border: none;
-      color: white;
+    nav a {
+      color: #ccc;
+      text-decoration: none;
       font-size: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.2rem;
-    }
-
-    nav button.active {
-      color: var(--primary);
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <header>
-    <h2 style="margin-bottom: 0; color: #A78BFA;">WarpAI</h2>
-    <h4 style="margin: 0.2rem 0;">Onchain Activity Tracker</h4>
-    <small style="opacity: 0.6;">Track your life on-chain</small>
+    <div id="brand">WarpAI</div>
+    <h1 id="main-title">Onchain Activity Tracker</h1>
+    <p id="subtitle">Track your life on-chain</p>
   </header>
 
-  <div class="button-row">
-    <button class="contrast">👛 Wallet</button>
-    <button class="contrast">🎁 Claim</button>
-    <button class="contrast">📍 Track</button>
+  <div class="card-row">
+    <div class="card">👛<br><strong>Wallet</strong></div>
+    <div class="card">🎁<br><strong>Claim</strong></div>
+    <div class="card">📍<br><strong>Track</strong></div>
   </div>
 
-  <div class="status-row">
-    <div class="status-pill">
-      <span>⛽ Gas</span>
-      Fast: <span id="gas-price">--</span>
-      <div class="gas-meter">
-        <div id="gas-fill" class="meter-fill gas-fill" style="width: 30%;"></div>
-      </div>
+  <div class="card-row">
+    <div class="statbox">
+      <div class="stat-title">⛽ Gas<br><small>Fast: --</small></div>
+      <div class="meter"><div style="width:30%;background:linear-gradient(to right,green,yellow)"></div></div>
     </div>
-    <div class="status-pill">
-      <span>🎯 XP</span>
-      Streak: 3d | XP: <span>120</span>
-      <div class="xp-meter">
-        <div class="meter-fill xp-fill" style="width: 40%;"></div>
-      </div>
+    <div class="statbox">
+      <div class="stat-title">🎯 XP<br><small>Streak: 3d | XP: 120</small></div>
+      <div class="meter"><div style="width:25%;background:linear-gradient(to right,red,orange)"></div></div>
     </div>
-    <div class="status-pill">
-      <span>🔎 Activity</span>
-      Latest: <span>6 tx</span>
+    <div class="statbox">
+      <div class="stat-title">🔍 Activity<br><small>Latest: 6 tx</small></div>
     </div>
   </div>
 
-  <div class="overview-box">
-    <h4>📊 Overview</h4>
+  <div class="overview">
+    <h3>📊 Overview</h3>
     <p>This box will change content depending on tab (Track, Leader, etc).</p>
   </div>
 
   <nav>
-    <button class="active">
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-    <button>
-      <span>📈</span>
-      <small>Track</small>
-    </button>
-    <button>
-      <span>🏆</span>
-      <small>Leader</small>
-    </button>
-    <button>
-      <span>👤</span>
-      <small>Profile</small>
-    </button>
+    <a href="#">🏠<br>Home</a>
+    <a href="#">📈<br>Track</a>
+    <a href="#">🏆<br>Leader</a>
+    <a href="#">👤<br>Profile</a>
   </nav>
 </body>
 </html>
