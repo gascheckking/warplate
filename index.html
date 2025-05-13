@@ -1,73 +1,158 @@
-import React from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WarpAI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    :root {
+      --primary: #7A5FFF;
+      --text: #f1f1f1;
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --accent: #10B981;
+      --warning: #F59E0B;
+    }
 
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-black text-white p-4 space-y-4 font-sans">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-purple-400">WarpAI</h1>
-        <h2 className="text-xl font-semibold text-gray-300">Onchain Activity Tracker</h2>
-        <p className="text-sm text-gray-500">Track your life on-chain</p>
-      </div>
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      max-width: 420px;
+      margin: auto;
+    }
 
-      {/* Top Action Buttons */}
-      <div className="grid grid-cols-3 gap-3 text-center">
-        <div className="bg-gray-900 rounded-xl py-2 text-sm">💰 Wallet</div>
-        <div className="bg-gray-900 rounded-xl py-2 text-sm">🎁 Claim</div>
-        <div className="bg-gray-900 rounded-xl py-2 text-sm">📍 Track</div>
-      </div>
+    header {
+      text-align: center;
+      padding: 24px 12px 16px 12px;
+    }
 
-      {/* Metric Cards Row */}
-      <div className="grid grid-cols-3 gap-3 text-sm">
-        <div className="bg-zinc-900 rounded-xl p-3 space-y-1">
-          <div className="font-semibold">⛽ Gas</div>
-          <div className="text-xs text-gray-400">Fast: --</div>
-          <div className="h-1 w-full bg-gray-800 rounded-full">
-            <div className="h-1 bg-gradient-to-r from-green-400 to-yellow-500 w-1/4 rounded-full"></div>
-          </div>
-        </div>
+    #brand {
+      text-align: left;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary);
+      padding-left: 16px;
+    }
 
-        <div className="bg-zinc-900 rounded-xl p-3 space-y-1">
-          <div className="font-semibold">🎯 XP</div>
-          <div className="text-xs text-gray-400">Streak: 3d | XP: 120</div>
-          <div className="h-1 w-full bg-gray-800 rounded-full">
-            <div className="h-1 bg-gradient-to-r from-red-500 to-yellow-400 w-1/5 rounded-full"></div>
-          </div>
-        </div>
+    #main-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0;
+      text-align: center;
+    }
 
-        <div className="bg-zinc-900 rounded-xl p-3 space-y-1">
-          <div className="font-semibold">🔍 Activity</div>
-          <div className="text-xs text-gray-400">Latest: 6 tx</div>
-        </div>
-      </div>
+    #subtitle {
+      font-size: 0.9rem;
+      color: #888;
+      margin: 0 0 16px 0;
+      text-align: center;
+    }
 
-      {/* Overview Section */}
-      <div className="bg-zinc-900 rounded-xl p-4">
-        <div className="font-semibold text-lg mb-1">📊 Overview</div>
-        <p className="text-sm text-gray-400">
-          This box will change content depending on tab (Track, Leader, etc).
-        </p>
-      </div>
+    .card-row, .stats-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 12px;
+      margin-bottom: 12px;
+    }
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-zinc-800 p-2 grid grid-cols-4 text-center text-xs text-white">
-        <div className="flex flex-col items-center">
-          <span>🏠</span>
-          <span>Home</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span>📉</span>
-          <span>Track</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span>🏆</span>
-          <span>Leader</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span>👤</span>
-          <span>Profile</span>
-        </div>
-      </div>
+    .card, .statbox {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 12px;
+      flex: 1;
+    }
+
+    .stat-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .meter {
+      width: 100%;
+      height: 6px;
+      background: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .meter > div {
+      height: 100%;
+      transition: width 0.3s ease-in-out;
+    }
+
+    .overview {
+      background: var(--card);
+      margin: 0 12px 20px;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 420px;
+      margin: auto;
+      display: flex;
+      justify-content: space-around;
+      background: #000;
+      padding: 10px 0;
+      border-top: 1px solid #222;
+    }
+
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.75rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="brand">WarpAI</div>
+    <h1 id="main-title">Onchain Activity Tracker</h1>
+    <p id="subtitle">Track your life on-chain</p>
+  </header>
+
+  <div class="card-row">
+    <div class="card">👛<br><strong>Wallet</strong></div>
+    <div class="card">🎁<br><strong>Claim</strong></div>
+    <div class="card">📍<br><strong>Track</strong></div>
+  </div>
+
+  <div class="card-row">
+    <div class="statbox">
+      <div class="stat-title">⛽ Gas<br><small>Fast: --</small></div>
+      <div class="meter"><div style="width:30%;background:linear-gradient(to right,green,yellow)"></div></div>
     </div>
-  );
-}
+    <div class="statbox">
+      <div class="stat-title">🎯 XP<br><small>Streak: 3d | XP: 120</small></div>
+      <div class="meter"><div style="width:25%;background:linear-gradient(to right,red,orange)"></div></div>
+    </div>
+    <div class="statbox">
+      <div class="stat-title">🔍 Activity<br><small>Latest: 6 tx</small></div>
+    </div>
+  </div>
+
+  <div class="overview">
+    <h3>📊 Overview</h3>
+    <p>This box will change content depending on tab (Track, Leader, etc).</p>
+  </div>
+
+  <nav>
+    <a href="#">🏠<br>Home</a>
+    <a href="#">📈<br>Track</a>
+    <a href="#">🏆<br>Leader</a>
+    <a href="#">👤<br>Profile</a>
+  </nav>
+</body>
+</html>
