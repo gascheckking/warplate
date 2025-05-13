@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WarpAI | Onchain Activity Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <title>WarpAI | Onchain Activity</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
   <style>
     :root {
       --primary: #6E6EDE;
@@ -12,6 +12,12 @@
       --card-bg: #1a1a1a;
       --bg: #0d0d0d;
       --text: #ffffff;
+    }
+
+    [data-theme="light"] {
+      --card-bg: #f5f5f5;
+      --bg: #ffffff;
+      --text: #121212;
     }
 
     body {
@@ -23,41 +29,11 @@
       font-family: 'Inter', system-ui;
     }
 
-    .tab { display: none; }
-    .tab.active { display: block; }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--card-bg);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      border-top: 1px solid #333;
-      max-width: 420px;
-      margin: 0 auto;
-    }
-
-    .bottom-nav button {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .bottom-nav button.active { color: var(--primary); }
-
     .gas-meter {
       height: 8px;
       background: #333;
-      border-radius: 6px;
-      margin: 8px 0;
+      border-radius: 4px;
+      margin: 12px 0;
       overflow: hidden;
     }
 
@@ -72,69 +48,228 @@
       margin-right: 8px;
     }
 
-    .card hgroup h3 {
-      font-size: 1rem;
+    .tab {
+      display: none;
     }
 
-    .card hgroup p {
-      font-size: 0.8rem;
+    .tab.active {
+      display: block;
     }
 
-    #gas-price {
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #333;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      color: var(--text);
       font-size: 0.9rem;
-      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
     }
 
-    #gas-time {
-      font-size: 0.75rem;
-      opacity: 0.6;
+    .bottom-nav button.active {
+      color: var(--primary);
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    #activity-feed {
+      max-height: 60vh;
+      overflow-y: auto;
     }
   </style>
 </head>
 <body>
   <main class="container">
     <header style="text-align: center; padding: 16px 0;">
-      <h1>WarpAI</h1>
-      <p style="margin-top: -8px; font-size: 0.9rem; opacity: 0.75;">Onchain Activity Tracker</p>
+      <h1 style="margin-bottom: 0;">WarpAI</h1>
+      <p style="margin-top: 0; opacity: 0.8;">Onchain Activity Tracker</p>
     </header>
 
+    <!-- Home Tab -->
     <section id="home" class="tab active">
       <article class="card">
         <hgroup>
           <h3>⛽ Base Network Gas</h3>
           <p>Current gas prices and recommendations</p>
         </hgroup>
-        <div class="gas-meter"><div id="gas-fill"></div></div>
+        <div class="gas-meter">
+          <div id="gas-fill"></div>
+        </div>
         <div style="display: flex; align-items: center;">
           <span id="gas-mood" class="emoji-badge">😎</span>
           <div>
-            <p id="gas-price">Loading...</p>
-            <small id="gas-time">—</small>
+            <p id="gas-price" style="margin: 0;">Loading gas data...</p>
+            <small id="gas-time" style="opacity: 0.7;">Updating now</small>
           </div>
         </div>
       </article>
+
+      <article class="card">
+        <hgroup>
+          <h3>🎁 Daily Rewards</h3>
+          <p>Claim your daily WARP tokens</p>
+        </hgroup>
+        <button id="claim-btn" class="secondary">Connect Wallet to Claim</button>
+        <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+          <small>🔥 Streak: <span id="streak">0</span> days</small>
+          <small>⚡ XP: <span id="xp">0</span></small>
+        </div>
+      </article>
+
+      <article class="card">
+        <hgroup>
+          <h3>🔭 Track Address</h3>
+          <p>Monitor any Base wallet</p>
+        </hgroup>
+        <input id="track-input" type="text" placeholder="0x..." style="margin-bottom: 12px;">
+        <button id="track-btn" class="outline">Add Address</button>
+      </article>
     </section>
 
-    <section id="activity" class="tab"><h3 style="padding: 16px;">Activity</h3></section>
-    <section id="leaderboard" class="tab"><h3 style="padding: 16px;">Top Wallets</h3></section>
-    <section id="profile" class="tab"><h3 style="padding: 16px;">Profile</h3></section>
+    <!-- Activity Tab -->
+    <section id="activity" class="tab">
+      <h3 style="padding-left: 16px;">Recent Activity</h3>
+      <div id="activity-feed">
+        <!-- Transactions will be added here dynamically -->
+      </div>
+    </section>
+
+    <!-- Leaderboard Tab -->
+    <section id="leaderboard" class="tab">
+      <h3 style="padding-left: 16px;">Top Collectors</h3>
+      <div id="leaderboard-list">
+        <!-- Leaderboard items will be added here dynamically -->
+      </div>
+    </section>
+
+    <!-- Profile Tab -->
+    <section id="profile" class="tab">
+      <article class="card">
+        <hgroup>
+          <h3>👤 Your Profile</h3>
+          <p>Wallet and account details</p>
+        </hgroup>
+        <div id="wallet-info" style="margin-bottom: 16px;">
+          <p id="wallet-address">Not connected</p>
+          <small id="wallet-balance">Balance: --</small>
+        </div>
+        <button id="connect-wallet">Connect Wallet</button>
+      </article>
+
+      <article class="card">
+        <hgroup>
+          <h3>🪙 Your Tokens</h3>
+          <p>WARP and other holdings</p>
+        </hgroup>
+        <div id="token-list">
+          <!-- Tokens will be added here dynamically -->
+        </div>
+      </article>
+    </section>
   </main>
 
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <button onclick="switchTab('home')" class="active"><span>🏠</span><small>Home</small></button>
-    <button onclick="switchTab('activity')"><span>📊</span><small>Activity</small></button>
-    <button onclick="switchTab('leaderboard')"><span>🏆</span><small>Top</small></button>
-    <button onclick="switchTab('profile')"><span>👤</span><small>Me</small></button>
+    <button onclick="switchTab('home')" class="active">
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+    <button onclick="switchTab('activity')">
+      <span>📊</span>
+      <small>Activity</small>
+    </button>
+    <button onclick="switchTab('leaderboard')">
+      <span>🏆</span>
+      <small>Leaderboard</small>
+    </button>
+    <button onclick="switchTab('profile')">
+      <span>👤</span>
+      <small>Profile</small>
+    </button>
   </nav>
 
-  <script src="gas.js"></script>
   <script>
+    // Tab switching
     function switchTab(tabId) {
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.bottom-nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
       document.getElementById(tabId).classList.add('active');
       event.currentTarget.classList.add('active');
     }
+
+    // Wallet connection
+    document.getElementById('connect-wallet').addEventListener('click', async () => {
+      if (!window.ethereum) {
+        alert('Please install MetaMask or Rabby Wallet');
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const address = accounts[0];
+        document.getElementById('wallet-address').textContent =
+          `${address.slice(0, 6)}...${address.slice(-4)}`;
+
+        // Update claim button
+        document.getElementById('claim-btn').textContent = '🎁 Claim Daily WARP';
+        document.getElementById('claim-btn').classList.remove('secondary');
+      } catch (error) {
+        console.error('Wallet connection error:', error);
+      }
+    });
+
+    // Gas price updates
+    async function updateGas() {
+      try {
+        const response = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await response.json();
+        const fastGas = data.speeds[1].estimatedFee.toFixed(1);
+
+        document.getElementById('gas-price').textContent = `Fast: ${fastGas} Gwei`;
+        document.getElementById('gas-time').textContent = new Date().toLocaleTimeString();
+
+        // Update gas meter
+        const gasPercentage = Math.min(fastGas, 100);
+        document.getElementById('gas-fill').style.width = `${gasPercentage}%`;
+
+        // Update mood emoji
+        let mood = '😎';
+        if (fastGas > 30) mood = '🔥';
+        if (fastGas > 70) mood = '💀';
+        document.getElementById('gas-mood').textContent = mood;
+      } catch (error) {
+        console.error('Gas update error:', error);
+      }
+    }
+
+    // Initialize
+    updateGas();
+    setInterval(updateGas, 30000);
   </script>
 </body>
 </html>
