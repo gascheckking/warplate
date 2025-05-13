@@ -8,75 +8,65 @@
   <style>
     :root {
       --primary: #6E6EDE;
+      --primary-hover: #7E7EEE;
+      --card-bg: #1a1a1a;
       --bg: #0d0d0d;
-      --text: #fff;
+      --text: #ffffff;
     }
     body {
       background: var(--bg);
       color: var(--text);
-      max-width: 375px;
+      max-width: 420px;
       margin: 0 auto;
-      padding: 12px;
-      font-family: 'Inter', sans-serif;
+      padding-bottom: 100px;
+      font-family: 'Inter', system-ui;
     }
-    .top-logo {
+    .app-header {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .action-bar {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 12px;
+      justify-content: space-around;
+      margin: 1rem 0;
     }
-    .top-logo img {
-      height: 48px;
+    .action-bar button {
+      background: #222;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
     }
-    .mini-buttons {
+    .mini-widgets {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 12px;
+      padding: 0 1rem;
+      margin-bottom: 1rem;
     }
-    .mini-buttons button {
-      flex: 1;
-      margin: 0 4px;
-      background: #1f1f1f;
-      border: none;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      color: white;
-    }
-    .card {
-      background: #1a1a1a;
+    .mini-widget {
+      background: #111;
       border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.8rem;
+      width: 48%;
     }
-    .gas-meter {
-      height: 8px;
-      background: #333;
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 8px 0;
-    }
-    #gas-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10B981, #F59E0B);
-      transition: width 0.3s;
-    }
-    .emoji-badge {
-      font-size: 1.3rem;
-      margin-right: 8px;
+    .main-content {
+      background: #151515;
+      padding: 1rem;
+      margin: 0 1rem;
+      border-radius: 16px;
     }
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: #121212;
+      background: #111;
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
-      max-width: 375px;
-      margin: 0 auto;
+      padding: 0.5rem 0;
       border-top: 1px solid #333;
+      max-width: 420px;
+      margin: 0 auto;
     }
     .bottom-nav button {
       background: none;
@@ -93,57 +83,50 @@
   </style>
 </head>
 <body>
-  <div class="top-logo">
-    <img src="https://og.warpai.xyz/gas?t=20250513" alt="WarpAI logo">
-    <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">Track your life onchain</p>
+  <div class="app-header">
+    <h2>WarpAI</h2>
+    <p style="opacity: 0.6;">Track your life onchain</p>
   </div>
 
-  <div class="mini-buttons">
-    <button onclick="connectWallet()">👛 Wallet</button>
-    <button onclick="claim()">🎁 Claim</button>
-    <button onclick="trackAddress()">📍 Track</button>
+  <div class="action-bar">
+    <button>👛 Wallet</button>
+    <button>🎁 Claim</button>
+    <button>📍 Track</button>
   </div>
 
-  <div class="card">
-    <h4>⛽ Base Gas</h4>
-    <div class="gas-meter"><div id="gas-fill"></div></div>
-    <div style="display: flex; align-items: center;">
-      <span id="gas-mood" class="emoji-badge">😎</span>
-      <div>
-        <p id="gas-price" style="margin: 0;">Loading...</p>
-        <small id="gas-time" style="opacity: 0.7;">--</small>
-      </div>
+  <div class="mini-widgets">
+    <div class="mini-widget">
+      ⛽ <strong>Gas</strong>
+      <div style="font-size: 0.7rem; opacity: 0.7;">Loading...</div>
+    </div>
+    <div class="mini-widget">
+      🔥 <strong>Activity</strong>
+      <div style="font-size: 0.7rem; opacity: 0.7;">Streak: 1d | XP: 100</div>
     </div>
   </div>
 
-  <div class="card">
-    <h4>🔥 Activity</h4>
-    <p>Streak: <span id="streak">1</span> days | XP: <span id="xp">100</span></p>
+  <div class="main-content">
+    <h3>📊 Stats Area</h3>
+    <p>This area changes when tabs below are clicked.</p>
   </div>
 
-  <div class="bottom-nav">
-    <button class="active"><span>🏠</span><small>Home</small></button>
-    <button><span>📊</span><small>Stats</small></button>
-    <button><span>🏆</span><small>Leaders</small></button>
-    <button><span>⚙️</span><small>Settings</small></button>
-  </div>
-
-  <script>
-    async function updateGas() {
-      try {
-        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-        const data = await res.json();
-        const gwei = data.speeds[1].estimatedFee.toFixed(1);
-        document.getElementById('gas-price').textContent = `${gwei} Gwei`;
-        document.getElementById('gas-fill').style.width = `${Math.min(gwei, 100)}%`;
-        document.getElementById('gas-mood').textContent = gwei < 30 ? '😎' : gwei < 70 ? '🔥' : '💀';
-        document.getElementById('gas-time').textContent = new Date().toLocaleTimeString();
-      } catch (err) {
-        document.getElementById('gas-price').textContent = 'Error';
-      }
-    }
-    updateGas();
-    setInterval(updateGas, 30000);
-  </script>
+  <nav class="bottom-nav">
+    <button class="active">
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+    <button>
+      <span>📈</span>
+      <small>Stats</small>
+    </button>
+    <button>
+      <span>🏆</span>
+      <small>Leaders</small>
+    </button>
+    <button>
+      <span>⚙️</span>
+      <small>Settings</small>
+    </button>
+  </nav>
 </body>
 </html>
