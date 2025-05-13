@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WarpAI - Onchain Tracker</title>
   <style>
     body {
@@ -16,52 +16,67 @@
     }
 
     header {
-      padding: 1rem;
+      padding: 1rem 1rem 0.25rem;
       text-align: left;
     }
 
     header h1 {
-      font-size: 1.6rem;
+      font-size: 1.2rem;
       color: #7869f6;
       margin: 0;
     }
 
     header h2 {
-      font-size: 1.2rem;
-      margin: 4px 0 0 0;
+      font-size: 1rem;
+      margin: 2px 0 0 0;
       color: #eee;
     }
 
     header p {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: #777;
-      margin: 2px 0 0 0;
+      margin: 0;
+    }
+
+    .grid {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 1rem;
+    }
+
+    .grid button {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 12px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.75rem;
     }
 
     .card {
       background: #1a1a1a;
       border-radius: 12px;
-      padding: 1rem;
-      margin: 1rem;
+      padding: 0.8rem 1rem;
+      margin: 0.5rem 1rem;
     }
 
     .card h3 {
       margin: 0 0 0.5rem;
-      font-size: 1rem;
+      font-size: 0.85rem;
     }
 
     .meter {
-      height: 10px;
+      height: 8px;
       background: #333;
       border-radius: 6px;
       overflow: hidden;
-      margin: 8px 0;
+      margin: 4px 0 6px;
     }
 
     .meter-fill {
       height: 100%;
       background: linear-gradient(to right, #10b981, #f59e0b);
-      width: 50%;
+      width: 45%;
       transition: width 0.5s;
     }
 
@@ -81,7 +96,7 @@
       background: none;
       border: none;
       color: #999;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -98,6 +113,12 @@
     <h2>Onchain Activity Tracker</h2>
     <p>Track your life on-chain</p>
   </header>
+
+  <div class="grid">
+    <button>👛 Wallet</button>
+    <button>🎁 Claim</button>
+    <button>📍 Track</button>
+  </div>
 
   <section class="card">
     <h3>⛽ Base Gas</h3>
