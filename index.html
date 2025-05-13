@@ -3,71 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WarpAI | Onchain Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <title>Onchain Activity Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <style>
     :root {
       --primary: #6E6EDE;
+      --primary-hover: #7E7EEE;
+      --card-bg: #1a1a1a;
       --bg: #0d0d0d;
       --text: #ffffff;
     }
-
     body {
       background: var(--bg);
       color: var(--text);
       max-width: 420px;
       margin: 0 auto;
       padding-bottom: 80px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', system-ui;
     }
-
+    header {
+      text-align: left;
+      padding: 20px 16px 8px;
+    }
     header h1 {
-      font-size: 1.3rem;
+      font-size: 1rem;
+      margin: 0;
       color: var(--primary);
+    }
+    header h2 {
+      font-size: 1.4rem;
+      margin: 4px 0;
+    }
+    header p {
+      font-size: 0.85rem;
+      opacity: 0.7;
       margin: 0;
     }
-
-    header p {
-      font-size: 0.8rem;
-      margin-top: 4px;
-      opacity: 0.7;
-    }
-
-    .card {
-      background: #1a1a1a;
-      padding: 12px;
+    .module {
+      background: var(--card-bg);
+      padding: 12px 16px;
+      margin: 10px 16px;
       border-radius: 10px;
-      margin-bottom: 12px;
     }
-
-    .gas-bar {
-      height: 8px;
-      border-radius: 6px;
-      background: linear-gradient(to right, #10B981, #F59E0B, #EF4444);
-      width: 100%;
-      position: relative;
+    .module h3 {
+      font-size: 0.9rem;
+      margin: 0 0 4px;
     }
-
-    .gas-indicator {
-      position: absolute;
-      top: -4px;
-      width: 2px;
-      height: 16px;
-      background: white;
+    .small-value {
+      font-size: 0.8rem;
+      opacity: 0.9;
     }
-
-    .stat-line {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-    }
-
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: #121212;
+      background: var(--card-bg);
       display: flex;
       justify-content: space-around;
       padding: 10px 0;
@@ -75,72 +66,54 @@
       max-width: 420px;
       margin: 0 auto;
     }
-
     .bottom-nav button {
       background: none;
       border: none;
       color: var(--text);
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
+    .bottom-nav button.active {
+      color: var(--primary);
+    }
   </style>
 </head>
 <body>
-  <main class="container">
-    <header style="text-align: center; padding: 8px 0;">
-      <h1>WarpAI</h1>
-      <p>Track your life onchain</p>
-    </header>
+  <header>
+    <h1>WarpAI</h1>
+    <h2>Onchain Activity Tracker</h2>
+    <p>Track your life on-chain</p>
+  </header>
 
-    <section class="card">
-      <div class="stat-line">
-        <span>⛽ Gas Tracker</span>
-        <span id="gwei">45 Gwei</span>
-      </div>
-      <div class="gas-bar">
-        <div class="gas-indicator" style="left:45%;"></div>
-      </div>
-    </section>
+  <div class="module">
+    <h3>⛽ Base Gas</h3>
+    <p class="small-value">Fast: <span id="gas-value">loading...</span> Gwei</p>
+  </div>
 
-    <section class="card">
-      <div class="stat-line">
-        <span>🔥 Streak</span>
-        <span id="streak">2 days</span>
-      </div>
-      <div class="stat-line">
-        <span>⚡ XP</span>
-        <span id="xp">120</span>
-      </div>
-    </section>
+  <div class="module">
+    <h3>🎁 Daily Claim</h3>
+    <p class="small-value">Streak: <span id="streak">0</span> days | XP: <span id="xp">0</span></p>
+  </div>
 
-    <section class="card">
-      <div class="stat-line">
-        <span>🧠 Onchain Activity</span>
-        <span><a href="#">+ more</a></span>
-      </div>
-      <p style="font-size: 0.75rem; margin-top: 4px;">Scan wallets, track transactions & fees.</p>
-    </section>
-  </main>
+  <div class="module">
+    <h3>🔎 Activity</h3>
+    <p class="small-value">Latest: <span id="activity">0 tx</span></p>
+  </div>
 
   <nav class="bottom-nav">
-    <button>
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-    <button>
-      <span>📊</span>
-      <small>Track</small>
-    </button>
-    <button>
-      <span>🎁</span>
-      <small>Claim</small>
-    </button>
-    <button>
-      <span>👤</span>
-      <small>Profile</small>
-    </button>
+    <button class="active"><span>🏠</span><small>Home</small></button>
+    <button><span>📊</span><small>Track</small></button>
+    <button><span>🏆</span><small>Leader</small></button>
+    <button><span>👤</span><small>Profile</small></button>
   </nav>
+
+  <script>
+    document.getElementById("gas-value").textContent = "14.3";
+    document.getElementById("streak").textContent = "3";
+    document.getElementById("xp").textContent = "120";
+    document.getElementById("activity").textContent = "6 tx";
+  </script>
 </body>
 </html>
