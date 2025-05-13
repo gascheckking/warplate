@@ -1,119 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI | Onchain Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WarpAI | Onchain Activity Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <style>
-    :root {
-      --primary: #6E6EDE;
-      --primary-hover: #7E7EEE;
-      --card-bg: #1a1a1a;
-      --bg: #0d0d0d;
-      --text: #ffffff;
-    }
-    
-    [data-theme="light"] {
-      --card-bg: #f5f5f5;
-      --bg: #ffffff;
-      --text: #121212;
-    }
-    
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: #0d0d0d;
+      color: white;
       max-width: 420px;
       margin: 0 auto;
       padding-bottom: 80px;
-      font-family: 'Inter', system-ui;
+      font-family: 'Inter', sans-serif;
     }
-    
+
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+
     .gas-meter {
-      height: 12px;
+      height: 10px;
       background: #333;
       border-radius: 6px;
-      margin: 16px 0;
+      margin: 12px 0;
       overflow: hidden;
     }
-    
+
     #gas-fill {
       height: 100%;
       background: linear-gradient(90deg, #10B981, #F59E0B);
       transition: width 0.3s;
     }
-    
-    .emoji-badge {
-      font-size: 1.5rem;
-      margin-right: 12px;
-    }
-    
-    .tab {
-      display: none;
-    }
-    
-    .tab.active {
-      display: block;
-    }
-    
+
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--card-bg);
+      background: #1a1a1a;
+      border-top: 1px solid #333;
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
-      border-top: 1px solid #333;
-      max-width: 420px;
-      margin: 0 auto;
+      padding: 10px 0;
     }
-    
+
     .bottom-nav button {
       background: none;
       border: none;
-      color: var(--text);
+      color: #aaa;
       font-size: 0.9rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
     }
-    
+
     .bottom-nav button.active {
-      color: var(--primary);
-    }
-    
-    .transaction-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #333;
-    }
-    
-    #activity-feed {
-      max-height: 60vh;
-      overflow-y: auto;
+      color: #6E6EDE;
     }
   </style>
 </head>
 <body>
   <main class="container">
     <header style="text-align: center; padding: 16px 0;">
-      <h1 style="margin-bottom: 0;">WarpAI</h1>
-      <p style="margin-top: 0; opacity: 0.8;">Onchain Activity Tracker</p>
+      <h1>WarpAI</h1>
+      <p style="opacity: 0.7;">Onchain Activity Tracker</p>
     </header>
 
-    <!-- Home Tab -->
     <section id="home" class="tab active">
       <article class="card">
-        <hgroup>
-          <h3>⛽ Base Network Gas</h3>
-          <p>Current gas prices and recommendations</p>
-        </hgroup>
+        <h3>⛽ Base Network Gas</h3>
+        <p>Current gas prices and recommendations</p>
         <div class="gas-meter">
           <div id="gas-fill"></div>
         </div>
-        <div style="display: flex; align-items: center;">
-          <span id="gas-mood" class="emoji-badge">
+        <div style="display:flex; align-items: center; gap:12px;">
+          <span id="gas-mood" style="font-size: 1.5rem;">😎</span>
+          <p id="gas-price">Loading...</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="activity" class="tab">
+      <h3 style="padding-left:16px;">📊 Activity</h3>
+      <p style="padding:0 16px;">Your latest onchain actions</p>
+    </section>
+
+    <section id="leaderboard" class="tab">
+      <h3 style="padding-left:16px;">🏆 Leaderboard</h3>
+      <p style="padding:0 16px;">Top users by XP and claims</p>
+    </section>
+
+    <section id="profile" class="tab">
+      <h3 style="padding-left:16px;">👤 Profile</h3>
+      <p style="padding:0 16px;">Wallet, WARP and XP overview</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button onclick="switchTab('home')" class="active">🏠<small>Home</small></button>
+    <button onclick="switchTab('activity')">📊<small>Activity</small></button>
+    <button onclick="switchTab('leaderboard')">🏆<small>Top</small></button>
+    <button onclick="switchTab('profile')">👤<small>Me</small></button>
+  </nav>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.bottom-nav button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+    }
+
+    async function updateGas() {
+      try {
+        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await res.json();
+        const gwei = data.speeds[1].estimatedFee.toFixed(1);
+        document.getElementById('gas-price').textContent = `${gwei} Gwei`;
+        document.getElementById('gas-fill').style.width = `${Math.min(gwei,100)}%`;
+        document.getElementById('gas-mood').textContent = gwei < 30 ? '😎' : gwei < 70 ? '🔥' : '💀';
+      } catch (err) {
+        console.error("Gas update failed", err);
+      }
+    }
+
+    updateGas();
+    setInterval(updateGas, 30000);
+  </script>
+</body>
+</html>
