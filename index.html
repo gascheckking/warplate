@@ -55,4 +55,116 @@
       font-size: 0.75rem;
       flex: 1;
     }
-   
+    .metric {
+      background: #121212;
+      border-radius: 6px;
+      margin-top: 6px;
+      padding: 6px;
+      font-size: 0.65rem;
+    }
+    .progress {
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 20%;
+      transition: width 0.3s ease;
+    }
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 420px;
+      margin: auto;
+      display: flex;
+      justify-content: space-around;
+      background: var(--bg);
+      border-top: 1px solid #222;
+      padding: 10px 0;
+    }
+    nav a {
+      font-size: 0.7rem;
+      color: #999;
+      text-align: center;
+    }
+    nav a.active {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="brand">WarpAI</div>
+    <h1>Onchain Activity</h1>
+    <p>Track your life on-chain</p>
+  </header>
+
+  <div class="dashboard">
+    <div class="card">
+      👛<br><strong>Wallet</strong>
+    </div>
+    <div class="card">
+      🎁<br><strong>Claim</strong>
+    </div>
+    <div class="card">
+      📍<br><strong>Track</strong>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="card">
+      ⛽ Gas / Fee
+      <div class="metric">
+        <span id="gas-text">Fast: -- Gwei</span>
+        <div class="progress"><div id="gas-bar" class="progress-bar" style="background: linear-gradient(to right, green, yellow); width: 0%;"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      🎯 XP
+      <div class="metric">
+        Streak: 3d<br>XP: 120
+        <div class="progress"><div style="width: 25%; background: linear-gradient(to right, red, orange);" class="progress-bar"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      🔍 Activity
+      <div class="metric">
+        Latest: 6 tx
+        <div class="progress"><div style="width: 30%; background: linear-gradient(to right, #3B82F6, #60A5FA);" class="progress-bar"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="#" class="active">🏠<br>Home</a>
+    <a href="#">📈<br>Track</a>
+    <a href="#">🏆<br>Leader</a>
+    <a href="#">👤<br>Profile</a>
+  </nav>
+
+  <script>
+    async function updateGas() {
+      try {
+        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await res.json();
+        const fee = data.speeds[1].estimatedFee.toFixed(1);
+        const gasBar = document.getElementById('gas-bar');
+        const gasText = document.getElementById('gas-text');
+        gasText.textContent = `Fast: ${fee} Gwei`;
+        gasBar.style.width = `${Math.min(fee, 100)}%`;
+        gasBar.style.background = fee < 30 ? 'green' : fee < 70 ? 'orange' : 'red';
+      } catch (e) {
+        console.error('Failed to load gas data', e);
+      }
+    }
+
+    updateGas();
+    setInterval(updateGas, 30000);
+  </script>
+</body>
+</html>
