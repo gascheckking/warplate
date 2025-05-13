@@ -3,58 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI | Onchain Activity</title>
+  <title>WarpAI | Onchain Tracker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
     :root {
-      --primary: #6E6EDE;
-      --primary-hover: #7E7EEE;
-      --card-bg: #1a1a1a;
       --bg: #0d0d0d;
       --text: #ffffff;
+      --accent: #6E6EDE;
+      --box: #1a1a1a;
     }
+    
     body {
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
+      font-family: 'Inter', sans-serif;
+      padding-bottom: 80px;
       max-width: 420px;
-      margin: 0 auto;
-      padding-bottom: 100px;
-      font-family: 'Inter', system-ui;
+      margin: auto;
     }
-    .app-header {
+
+    header {
       text-align: center;
-      margin-top: 1.5rem;
+      margin: 24px 0;
     }
-    .action-bar {
+    .logo-img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 6px;
+    }
+    .tagline {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .top-actions {
       display: flex;
       justify-content: space-around;
-      margin: 1rem 0;
+      margin: 16px 0;
     }
-    .action-bar button {
-      background: #222;
-      padding: 0.6rem 1.2rem;
+    .top-actions button {
+      flex: 1;
+      margin: 0 6px;
+      font-size: 0.9rem;
+      padding: 10px;
       border-radius: 12px;
+      background-color: var(--box);
+      color: var(--text);
+    }
+
+    .mini-boxes {
+      display: flex;
+      justify-content: space-around;
+      margin: 12px;
+    }
+    .mini-boxes .card {
+      width: 48%;
+      background: var(--box);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .main-content {
+      background-color: var(--box);
+      margin: 16px;
+      border-radius: 16px;
+      padding: 16px;
       font-size: 0.9rem;
     }
-    .mini-widgets {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 1rem;
-      margin-bottom: 1rem;
-    }
-    .mini-widget {
-      background: #111;
-      border-radius: 12px;
-      padding: 0.5rem 0.8rem;
-      font-size: 0.8rem;
-      width: 48%;
-    }
-    .main-content {
-      background: #151515;
-      padding: 1rem;
-      margin: 0 1rem;
-      border-radius: 16px;
-    }
+
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -63,52 +80,53 @@
       background: #111;
       display: flex;
       justify-content: space-around;
-      padding: 0.5rem 0;
       border-top: 1px solid #333;
+      padding: 10px 0;
       max-width: 420px;
-      margin: 0 auto;
+      margin: auto;
     }
     .bottom-nav button {
       background: none;
       border: none;
-      color: var(--text);
-      font-size: 0.8rem;
+      color: #aaa;
+      font-size: 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    .bottom-nav button.active {
-      color: var(--primary);
+    .bottom-nav .active {
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-  <div class="app-header">
+  <header>
+    <img src="/logo.svg" alt="WarpAI Logo" class="logo-img">
     <h2>WarpAI</h2>
-    <p style="opacity: 0.6;">Track your life onchain</p>
-  </div>
+    <p class="tagline">Track your life onchain</p>
+  </header>
 
-  <div class="action-bar">
-    <button>👛 Wallet</button>
+  <section class="top-actions">
+    <button>👜 Wallet</button>
     <button>🎁 Claim</button>
     <button>📍 Track</button>
-  </div>
+  </section>
 
-  <div class="mini-widgets">
-    <div class="mini-widget">
-      ⛽ <strong>Gas</strong>
-      <div style="font-size: 0.7rem; opacity: 0.7;">Loading...</div>
+  <section class="mini-boxes">
+    <div class="card">
+      <strong>⛽ Gas</strong>
+      <p>Loading...</p>
     </div>
-    <div class="mini-widget">
-      🔥 <strong>Activity</strong>
-      <div style="font-size: 0.7rem; opacity: 0.7;">Streak: 1d | XP: 100</div>
+    <div class="card">
+      <strong>🔥 Activity</strong>
+      <p>Streak: 1d | XP: 100</p>
     </div>
-  </div>
+  </section>
 
-  <div class="main-content">
-    <h3>📊 Stats Area</h3>
-    <p>This area changes when tabs below are clicked.</p>
-  </div>
+  <section class="main-content">
+    <h4>📊 Stats</h4>
+    <p>This area updates based on selected tab.</p>
+  </section>
 
   <nav class="bottom-nav">
     <button class="active">
