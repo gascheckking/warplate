@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WarpAI | Onchain Activity</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
     body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
       background-color: #0d0d0d;
-      color: white;
-      max-width: 430px;
-      margin-inline: auto;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      margin: 0 auto;
       padding-bottom: 80px;
+      max-width: 430px;
     }
 
-    .tab {
-      display: none;
+    h1, h2, h3 { margin: 0.2em 0; }
+    p { margin: 0.2em 0; opacity: 0.85; }
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 12px 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
 
-    .tab.active {
-      display: block;
+    .gas-bar {
+      height: 8px;
+      background: #333;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .gas-fill {
+      height: 100%;
+      background: linear-gradient(to right, #10B981, #F59E0B);
+      width: 45%;
     }
 
     .bottom-nav {
@@ -29,87 +45,114 @@
       bottom: 0;
       left: 0;
       right: 0;
+      max-width: 430px;
+      margin: 0 auto;
+      background: #121212;
+      border-top: 1px solid #222;
       display: flex;
       justify-content: space-around;
-      background-color: #1a1a1a;
-      border-top: 1px solid #333;
       padding: 8px 0;
-      z-index: 1000;
-      max-width: 430px;
-      margin-inline: auto;
     }
 
     .bottom-nav button {
-      background: none;
-      border: none;
-      color: white;
+      all: unset;
+      text-align: center;
+      color: #aaa;
       font-size: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .bottom-nav button.active {
-      color: #6E6EDE;
+      color: #fff;
     }
 
-    .bottom-nav button span {
-      font-size: 1.2rem;
-      line-height: 1;
+    .bottom-nav span {
+      font-size: 1.3rem;
     }
+
+    .header {
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+
+    .input-wrap {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    input {
+      flex: 1;
+    }
+
   </style>
 </head>
 <body>
-  <main>
-    <section id="home" class="tab active">
-      <h1 style="text-align:center;margin:1rem 0 0.25rem">WarpAI</h1>
-      <p style="text-align:center;opacity:0.7;margin:0 0 1rem">Onchain Activity Tracker</p>
-      <!-- Innehåll för startsidan här -->
-    </section>
-    <section id="profile" class="tab">
-      <h2>👤 Profile</h2>
-    </section>
-    <section id="leaderboard" class="tab">
-      <h2>🏆 Leaderboard</h2>
-    </section>
-    <section id="referrals" class="tab">
-      <h2>🫂 Referrals</h2>
-    </section>
-    <section id="menu" class="tab">
-      <h2>☰ Menu</h2>
-    </section>
-  </main>
+  <header class="header">
+    <h1>WarpAI</h1>
+    <p style="opacity: 0.6;">Onchain Activity Tracker</p>
+  </header>
+
+  <!-- Gas -->
+  <section class="card">
+    <h3>⛽ Base Gas</h3>
+    <p>Current gas prices and mood</p>
+    <div class="gas-bar">
+      <div class="gas-fill" id="gas-fill"></div>
+    </div>
+    <p style="margin-top: 4px;">
+      <span id="gas-mood">😎</span> 
+      <span id="gas-value">Loading gas data...</span>
+    </p>
+  </section>
+
+  <!-- Rewards -->
+  <section class="card">
+    <h3>🎁 Daily Rewards</h3>
+    <p>Claim your daily WARP</p>
+    <button id="claim-btn">Connect Wallet</button>
+    <p style="font-size: 0.8rem; margin-top: 6px;">
+      🔥 Streak: <span id="streak">0</span> | ⚡ XP: <span id="xp">0</span>
+    </p>
+  </section>
+
+  <!-- Tracker -->
+  <section class="card">
+    <h3>🔭 Track Address</h3>
+    <p>Monitor any Base wallet</p>
+    <div class="input-wrap">
+      <input id="track-input" placeholder="0x...">
+      <button id="track-btn">Add</button>
+    </div>
+  </section>
+
+  <!-- Bottom Nav -->
   <nav class="bottom-nav">
-    <button onclick="switchTab('home', this)" class="active">
-      <span>🏠</span>
-      Home
-    </button>
-    <button onclick="switchTab('profile', this)">
-      <span>👤</span>
-      Profile
-    </button>
-    <button onclick="switchTab('leaderboard', this)">
-      <span>🏆</span>
-      Leaderboard
-    </button>
-    <button onclick="switchTab('referrals', this)">
-      <span>🫂</span>
-      Referrals
-    </button>
-    <button onclick="switchTab('menu', this)">
-      <span>☰</span>
-      Menu
-    </button>
+    <button class="active"><span>🏠</span><br>Home</button>
+    <button><span>👤</span><br>Profile</button>
+    <button><span>🏆</span><br>Leaderboard</button>
+    <button><span>👥</span><br>Referrals</button>
+    <button><span>☰</span><br>Menu</button>
   </nav>
 
   <script>
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      el.classList.add('active');
+    async function updateGas() {
+      try {
+        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await res.json();
+        const fast = data.speeds[1].estimatedFee.toFixed(1);
+        document.getElementById('gas-value').textContent = `Fast: ${fast} Gwei`;
+        let mood = '😎';
+        if (fast > 40) mood = '🔥';
+        if (fast > 70) mood = '💀';
+        document.getElementById('gas-mood').textContent = mood;
+        document.getElementById('gas-fill').style.width = `${Math.min(fast, 100)}%`;
+      } catch (err) {
+        document.getElementById('gas-value').textContent = 'Error loading';
+      }
     }
+
+    updateGas();
+    setInterval(updateGas, 30000);
   </script>
 </body>
 </html>
