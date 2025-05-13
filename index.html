@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WarpAI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <style>
     :root {
       --primary: #7A5FFF;
@@ -14,152 +14,45 @@
       --accent: #10B981;
       --warning: #F59E0B;
     }
-
     body {
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: Inter, sans-serif;
       margin: 0 auto;
       max-width: 420px;
       padding: 0 12px;
     }
-
     header {
       text-align: center;
-      padding: 20px 0 15px;
+      padding: 20px 0 12px;
     }
-
     #brand {
       font-weight: 700;
+      font-size: 1rem;
       color: var(--primary);
-      margin-bottom: 8px;
+      letter-spacing: -0.4px;
     }
-
+    h1 {
+      font-size: 1.25rem;
+      margin-bottom: 0.3rem;
+    }
+    p {
+      font-size: 0.75rem;
+      color: #aaa;
+      margin: 0;
+    }
     .dashboard {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 12px 0;
     }
-
-    .action-card {
+    .card {
       background: var(--card);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 10px;
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
+      flex: 1;
     }
-
-    .metric {
-      background: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 6px;
-      font-size: 0.65rem;
-      margin-top: 6px;
-    }
-
-    .metric-title {
-      font-size: 0.65rem;
-      margin-bottom: 3px;
-    }
-
-    .progress {
-      height: 4px;
-      background: #333;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      transition: width 0.3s ease;
-    }
-
-    .overview {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 16px;
-      margin: 12px 0 80px;
-      font-size: 0.8rem;
-    }
-
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-width: 420px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-around;
-      background: var(--bg);
-      padding: 12px 0;
-      border-top: 1px solid #222;
-    }
-
-    nav a {
-      color: #666;
-      text-decoration: none;
-      font-size: 0.65rem;
-      text-align: center;
-    }
-
-    nav a.active {
-      color: var(--primary);
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div id="brand">WarpAI</div>
-    <h1 style="font-size: 1.2rem; margin: 0">Onchain Tracker</h1>
-    <p style="font-size: 0.75rem; margin-top: 4px; color: #aaa">Your life on chain</p>
-  </header>
-
-  <div class="dashboard">
-    <div class="action-card">
-      👛 Wallet
-      <div class="metric">
-        <div class="metric-title">⛽ Gas Fee</div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 22%; background: linear-gradient(90deg, #10B981, #F59E0B)"></div>
-        </div>
-        <div style="opacity: 0.6; font-size: 0.6rem;">12 gwei</div>
-      </div>
-    </div>
-    <div class="action-card">
-      🎁 Claim
-      <div class="metric">
-        <div class="metric-title">🔥 XP Streak</div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 30%; background: linear-gradient(90deg, #EF4444, #F59E0B)"></div>
-        </div>
-        <div style="opacity: 0.6; font-size: 0.6rem;">3d / 120 XP</div>
-      </div>
-    </div>
-    <div class="action-card">
-      📍 Track
-      <div class="metric">
-        <div class="metric-title">🔍 Activity</div>
-        <div class="progress">
-          <div class="progress-bar" style="width: 40%; background: linear-gradient(90deg, #3B82F6, #60A5FA)"></div>
-        </div>
-        <div style="opacity: 0.6; font-size: 0.6rem;">6 tx last 24h</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="overview">
-    <h3 style="margin-bottom: 6px;">📊 Overview</h3>
-    <p>This section updates based on selected tab: Wallet | Claim | Track | Leaderboard</p>
-  </div>
-
-  <nav>
-    <a href="#" class="active">🏠<br>Home</a>
-    <a href="#">📈<br>Track</a>
-    <a href="#">🎯<br>Rewards</a>
-    <a href="#">🏆<br>Leaderboard</a>
-    <a href="#">👤<br>Profile</a>
-  </nav>
-</body>
-</html>
+   
