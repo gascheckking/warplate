@@ -2,81 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Onchain Activity Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WarpAI - Onchain Tracker</title>
   <style>
-    :root {
-      --primary: #6E6EDE;
-      --primary-hover: #7E7EEE;
-      --card-bg: #1a1a1a;
-      --bg: #0d0d0d;
-      --text: #ffffff;
-    }
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: #0d0d0d;
+      color: #ddd;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
       max-width: 420px;
       margin: 0 auto;
-      padding-bottom: 80px;
-      font-family: 'Inter', system-ui;
     }
+
     header {
+      padding: 1rem;
       text-align: left;
-      padding: 20px 16px 8px;
     }
+
     header h1 {
-      font-size: 1rem;
+      font-size: 1.6rem;
+      color: #7869f6;
       margin: 0;
-      color: var(--primary);
     }
+
     header h2 {
-      font-size: 1.4rem;
-      margin: 4px 0;
+      font-size: 1.2rem;
+      margin: 4px 0 0 0;
+      color: #eee;
     }
+
     header p {
-      font-size: 0.85rem;
-      opacity: 0.7;
-      margin: 0;
-    }
-    .module {
-      background: var(--card-bg);
-      padding: 12px 16px;
-      margin: 10px 16px;
-      border-radius: 10px;
-    }
-    .module h3 {
-      font-size: 0.9rem;
-      margin: 0 0 4px;
-    }
-    .small-value {
       font-size: 0.8rem;
-      opacity: 0.9;
+      color: #777;
+      margin: 2px 0 0 0;
     }
-    .bottom-nav {
+
+    .card {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem;
+    }
+
+    .card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    .meter {
+      height: 10px;
+      background: #333;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: linear-gradient(to right, #10b981, #f59e0b);
+      width: 50%;
+      transition: width 0.5s;
+    }
+
+    footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--card-bg);
+      background: #121212;
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #333;
-      max-width: 420px;
-      margin: 0 auto;
+      padding: 0.5rem 0;
+      border-top: 1px solid #222;
     }
-    .bottom-nav button {
+
+    footer button {
       background: none;
       border: none;
-      color: var(--text);
+      color: #999;
       font-size: 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    .bottom-nav button.active {
-      color: var(--primary);
+
+    footer button.active {
+      color: #7869f6;
     }
   </style>
 </head>
@@ -87,33 +99,63 @@
     <p>Track your life on-chain</p>
   </header>
 
-  <div class="module">
+  <section class="card">
     <h3>⛽ Base Gas</h3>
-    <p class="small-value">Fast: <span id="gas-value">loading...</span> Gwei</p>
-  </div>
+    <div class="meter">
+      <div class="meter-fill" id="gas-meter"></div>
+    </div>
+    <p id="gas-text">Loading...</p>
+  </section>
 
-  <div class="module">
+  <section class="card">
     <h3>🎁 Daily Claim</h3>
-    <p class="small-value">Streak: <span id="streak">0</span> days | XP: <span id="xp">0</span></p>
-  </div>
+    <div class="meter" style="background: #333;">
+      <div class="meter-fill" style="background: linear-gradient(to right, #f43f5e, #facc15); width: 30%;"></div>
+    </div>
+    <p>Streak: 3 days | XP: 120</p>
+  </section>
 
-  <div class="module">
-    <h3>🔎 Activity</h3>
-    <p class="small-value">Latest: <span id="activity">0 tx</span></p>
-  </div>
+  <section class="card">
+    <h3>🔍 Activity</h3>
+    <p>Latest: 6 tx</p>
+  </section>
 
-  <nav class="bottom-nav">
-    <button class="active"><span>🏠</span><small>Home</small></button>
-    <button><span>📊</span><small>Track</small></button>
-    <button><span>🏆</span><small>Leader</small></button>
-    <button><span>👤</span><small>Profile</small></button>
-  </nav>
+  <footer>
+    <button class="active">
+      <span>🏠</span>
+      <span>Home</span>
+    </button>
+    <button>
+      <span>📊</span>
+      <span>Track</span>
+    </button>
+    <button>
+      <span>🏆</span>
+      <span>Leader</span>
+    </button>
+    <button>
+      <span>👤</span>
+      <span>Profile</span>
+    </button>
+  </footer>
 
   <script>
-    document.getElementById("gas-value").textContent = "14.3";
-    document.getElementById("streak").textContent = "3";
-    document.getElementById("xp").textContent = "120";
-    document.getElementById("activity").textContent = "6 tx";
+    async function updateGas() {
+      try {
+        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await res.json();
+        const fast = data.speeds[1].estimatedFee.toFixed(1);
+        const width = Math.min(100, fast) + '%';
+
+        document.getElementById('gas-meter').style.width = width;
+        document.getElementById('gas-text').textContent = `Fast: ${fast} Gwei`;
+      } catch (e) {
+        document.getElementById('gas-text').textContent = 'Error loading gas';
+      }
+    }
+
+    updateGas();
+    setInterval(updateGas, 30000);
   </script>
 </body>
 </html>
