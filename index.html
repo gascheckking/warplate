@@ -3,63 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI | Onchain Activity</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <title>WarpAI</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root {
-      --primary: #6E6EDE;
-      --bg: #0d0d0d;
-      --text: #fff;
-      --card: #1c1c1c;
-      --accent: #10B981;
-    }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, sans-serif;
-      max-width: 420px;
-      margin: 0 auto;
-      padding: 16px;
-      padding-bottom: 100px;
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background-color: #0d0d0d;
+      color: white;
+      max-width: 430px;
+      margin-inline: auto;
+      padding-bottom: 80px;
     }
 
-    h1, h2, h3, p { margin: 0; }
-    .section-card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    .tab {
+      display: none;
     }
 
-    .section-title {
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-
-    .gas-meter {
-      height: 8px;
-      background: #333;
-      border-radius: 4px;
-      overflow: hidden;
-      margin: 4px 0;
-    }
-    #gas-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10B981, #F59E0B);
-      transition: width 0.3s;
-    }
-
-    .track-input {
-      width: 100%;
-      border-radius: 6px;
-      padding: 8px;
-      border: none;
-      margin-bottom: 8px;
+    .tab.active {
+      display: block;
     }
 
     .bottom-nav {
@@ -67,84 +29,87 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #121212;
       display: flex;
       justify-content: space-around;
+      background-color: #1a1a1a;
+      border-top: 1px solid #333;
       padding: 8px 0;
-      max-width: 420px;
-      margin: 0 auto;
-      border-top: 1px solid #222;
+      z-index: 1000;
+      max-width: 430px;
+      margin-inline: auto;
     }
 
     .bottom-nav button {
       background: none;
       border: none;
-      color: var(--text);
+      color: white;
       font-size: 0.8rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
     }
 
     .bottom-nav button.active {
-      color: var(--primary);
+      color: #6E6EDE;
+    }
+
+    .bottom-nav button span {
+      font-size: 1.2rem;
+      line-height: 1;
     }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center; font-size:1.25rem; margin-bottom:16px;">WarpAI</h1>
-
-  <div class="section-card">
-    <div class="section-title">⛽ <strong>Base Network Gas</strong></div>
-    <p style="font-size:0.8rem; opacity:0.7;">Live gas prices and recommendations</p>
-    <div class="gas-meter"><div id="gas-fill" style="width:50%"></div></div>
-    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-      <span id="gas-mood">😎</span>
-      <span id="gas-price">Loading...</span>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">🎁 <strong>Daily Rewards</strong></div>
-    <p style="font-size:0.8rem; opacity:0.7;">Claim your daily WARP tokens</p>
-    <button id="claim-btn" style="width:100%; margin-top:6px;">Connect Wallet to Claim</button>
-    <div style="display:flex; justify-content:space-between; font-size:0.75rem; opacity:0.8; margin-top:6px;">
-      <span>🔥 Streak: <span id="streak">0</span>d</span>
-      <span>⚡ XP: <span id="xp">0</span></span>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">🔍 <strong>Track Address</strong></div>
-    <p style="font-size:0.8rem; opacity:0.7;">Enter a Base wallet to monitor</p>
-    <input id="track-input" class="track-input" placeholder="0x..." />
-    <button id="track-btn" style="width:100%;">Add Address</button>
-  </div>
-
+  <main>
+    <section id="home" class="tab active">
+      <h1 style="text-align:center;margin:1rem 0 0.25rem">WarpAI</h1>
+      <p style="text-align:center;opacity:0.7;margin:0 0 1rem">Onchain Activity Tracker</p>
+      <!-- Innehåll för startsidan här -->
+    </section>
+    <section id="profile" class="tab">
+      <h2>👤 Profile</h2>
+    </section>
+    <section id="leaderboard" class="tab">
+      <h2>🏆 Leaderboard</h2>
+    </section>
+    <section id="referrals" class="tab">
+      <h2>🫂 Referrals</h2>
+    </section>
+    <section id="menu" class="tab">
+      <h2>☰ Menu</h2>
+    </section>
+  </main>
   <nav class="bottom-nav">
-    <button class="active"><span>🏠</span><small>Home</small></button>
-    <button><span>📊</span><small>Activity</small></button>
-    <button><span>🏆</span><small>Leaderboard</small></button>
-    <button><span>👤</span><small>Profile</small></button>
+    <button onclick="switchTab('home', this)" class="active">
+      <span>🏠</span>
+      Home
+    </button>
+    <button onclick="switchTab('profile', this)">
+      <span>👤</span>
+      Profile
+    </button>
+    <button onclick="switchTab('leaderboard', this)">
+      <span>🏆</span>
+      Leaderboard
+    </button>
+    <button onclick="switchTab('referrals', this)">
+      <span>🫂</span>
+      Referrals
+    </button>
+    <button onclick="switchTab('menu', this)">
+      <span>☰</span>
+      Menu
+    </button>
   </nav>
 
   <script>
-    async function updateGas() {
-      try {
-        const response = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-        const data = await response.json();
-        const fee = data.speeds[1].estimatedFee.toFixed(1);
-        document.getElementById('gas-price').textContent = fee + ' Gwei';
-        document.getElementById('gas-fill').style.width = Math.min(fee,100) + '%';
-        document.getElementById('gas-mood').textContent = fee < 30 ? '😎' : fee < 70 ? '🔥' : '💀';
-      } catch (err) {
-        document.getElementById('gas-price').textContent = 'Error';
-        console.error('Gas fetch error:', err);
-      }
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
     }
-    updateGas();
-    setInterval(updateGas, 30000);
   </script>
 </body>
 </html>
