@@ -1,163 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WarpAI | Track Your Life Onchain</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #0d0d0d;
-        color: #f1f1f1;
-        font-family: 'Inter', sans-serif;
-        max-width: 430px;
-        margin-inline: auto;
-      }
-      header {
-        text-align: center;
-        padding: 24px 12px 8px;
-      }
-      .logo {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        margin-inline: auto;
-        margin-bottom: 8px;
-        background: url('/logo.png') no-repeat center/cover;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-      }
-      h1 {
-        font-size: 1.6rem;
-        margin: 0;
-      }
-      p.slogan {
-        font-size: 0.9rem;
-        color: #888;
-        margin-top: 4px;
-      }
-      .quick-actions {
-        display: flex;
-        justify-content: space-around;
-        padding: 16px;
-      }
-      .quick-actions button {
-        flex: 1;
-        margin: 0 6px;
-        padding: 12px;
-        background-color: #1c1c1c;
-        border: 1px solid #444;
-        color: #fff;
-        font-weight: 600;
-        border-radius: 12px;
-        font-size: 0.9rem;
-      }
-      .status-row {
-        display: flex;
-        justify-content: space-between;
-        padding-inline: 16px;
-        gap: 8px;
-      }
-      .card {
-        flex: 1;
-        padding: 12px;
-        background-color: #181818;
-        border-radius: 16px;
-        margin-top: 8px;
-      }
-      .card h2 {
-        font-size: 1rem;
-        margin: 0 0 6px;
-      }
-      .card p {
-        margin: 0;
-        font-size: 0.8rem;
-        color: #bbb;
-      }
-      .main-content {
-        padding: 16px;
-      }
-      .main-block {
-        background-color: #1a1a1a;
-        padding: 18px;
-        border-radius: 18px;
-        text-align: center;
-        margin-top: 12px;
-      }
-      .main-block h2 {
-        margin: 0;
-        font-size: 1.1rem;
-      }
-      .main-block p {
-        font-size: 0.8rem;
-        color: #888;
-      }
-      nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-around;
-        background-color: #111;
-        border-top: 1px solid #222;
-        padding: 10px 0;
-        max-width: 430px;
-        margin-inline: auto;
-      }
-      nav button {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 0.8rem;
-        text-align: center;
-      }
-      nav button span {
-        display: block;
-        font-size: 1.2rem;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <div class="logo"></div>
-      <h1>WarpAI</h1>
-      <p class="slogan">Track your life onchain</p>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WarpAI | Onchain Activity</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    :root {
+      --primary: #6E6EDE;
+      --primary-hover: #7E7EEE;
+      --bg: #0d0d0d;
+      --card-bg: #1a1a1a;
+      --text: #ffffff;
+    }
 
-    <div class="quick-actions">
-      <button>👜 Wallet</button>
-      <button>🎁 Claim</button>
-      <button>📍 Track</button>
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      max-width: 420px;
+      margin-inline: auto;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    header img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    p.subtitle {
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin: 1.5rem 0;
+    }
+
+    .action-buttons button {
+      flex: 1;
+      margin: 0 0.25rem;
+      background-color: var(--card-bg);
+      border: 1px solid #2e2e2e;
+      border-radius: 12px;
+      padding: 0.75rem;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .info-boxes {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 0 1rem;
+    }
+
+    .info-box {
+      background-color: var(--card-bg);
+      padding: 1rem;
+      border-radius: 12px;
+      flex: 1;
+      font-size: 0.85rem;
+    }
+
+    .central-box {
+      background-color: var(--card-bg);
+      margin: 0 1rem;
+      padding: 1.25rem;
+      border-radius: 12px;
+      text-align: center;
+      color: #ccc;
+    }
+
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 420px;
+      margin-inline: auto;
+      background-color: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.65rem 0;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    nav.bottom-nav button {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    nav.bottom-nav button.active {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="/logo.svg" alt="WarpAI logo" />
+    <h1>WarpAI</h1>
+    <p class="subtitle">Track your life onchain</p>
+  </header>
+
+  <div class="action-buttons">
+    <button>👜 Wallet</button>
+    <button>🎁 Claim</button>
+    <button>📍 Track</button>
+  </div>
+
+  <div class="info-boxes">
+    <div class="info-box">
+      <strong>⛽ Gas</strong>
+      <p id="gas-info">Loading...</p>
     </div>
-
-    <div class="status-row">
-      <div class="card">
-        <h2>⛽ Gas</h2>
-        <p>Loading...</p>
-      </div>
-      <div class="card">
-        <h2>🔥 Activity</h2>
-        <p>Streak: 1d | XP: 100</p>
-      </div>
+    <div class="info-box">
+      <strong>🔥 Activity</strong>
+      <p>Streak: 1d | XP: 100</p>
     </div>
+  </div>
 
-    <div class="main-content">
-      <div class="main-block">
-        <h2>📊 Stats</h2>
-        <p>This area updates based on selected tab.</p>
-      </div>
-    </div>
+  <div class="central-box">
+    <h3>📊 Stats</h3>
+    <p>This area updates based on selected tab.</p>
+  </div>
 
-    <nav>
-      <button><span>🏠</span>Home</button>
-      <button><span>📈</span>Stats</button>
-      <button><span>🏆</span>Leaders</button>
-      <button><span>⚙️</span>Settings</button>
-    </nav>
-  </body>
+  <nav class="bottom-nav">
+    <button class="active">
+      <span>🏠</span>
+      <small>Home</small>
+    </button>
+    <button>
+      <span>📈</span>
+      <small>Stats</small>
+    </button>
+    <button>
+      <span>🏆</span>
+      <small>Leaders</small>
+    </button>
+    <button>
+      <span>⚙️</span>
+      <small>Settings</small>
+    </button>
+  </nav>
+</body>
 </html>
