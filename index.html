@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WarpAI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
     :root {
       --primary: #7A5FFF;
@@ -12,86 +12,77 @@
       --bg: #0d0d0d;
       --card: #1a1a1a;
       --accent: #10B981;
-      --warning: #F59E0B;
     }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0 auto;
       max-width: 420px;
       padding: 0 12px;
     }
+
     header {
       text-align: center;
-      padding: 20px 0 12px;
+      padding: 20px 0 10px;
     }
+
     #brand {
-      font-weight: 700;
-      font-size: 1rem;
       color: var(--primary);
-      letter-spacing: -0.4px;
+      font-weight: 700;
     }
-    h1 {
-      font-size: 1.25rem;
-      margin-bottom: 0.3rem;
+
+    .tab-section {
+      display: none;
     }
-    p {
-      font-size: 0.75rem;
-      color: #aaa;
-      margin: 0;
+
+    .tab-section.active {
+      display: block;
     }
-    .dashboard {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      margin: 12px 0;
-    }
-    .card {
+
+    .dashboard, .overview, .placeholder {
       background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .action-card {
+      background: rgba(255,255,255,0.05);
       border-radius: 10px;
       padding: 10px;
       text-align: center;
       font-size: 0.75rem;
-      flex: 1;
     }
-    .metric {
-      background: #121212;
-      border-radius: 6px;
-      margin-top: 6px;
-      padding: 6px;
-      font-size: 0.65rem;
-    }
-    .progress {
-      height: 4px;
-      background: #333;
-      border-radius: 2px;
-      margin-top: 6px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      width: 20%;
-      transition: width 0.3s ease;
-    }
+
     nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       max-width: 420px;
-      margin: auto;
+      margin: 0 auto;
       display: flex;
       justify-content: space-around;
       background: var(--bg);
+      padding: 12px 0;
       border-top: 1px solid #222;
-      padding: 10px 0;
     }
+
     nav a {
+      color: #888;
       font-size: 0.7rem;
-      color: #999;
+      text-decoration: none;
       text-align: center;
     }
+
     nav a.active {
       color: var(--primary);
     }
@@ -100,71 +91,57 @@
 <body>
   <header>
     <div id="brand">WarpAI</div>
-    <h1>Onchain Activity</h1>
-    <p>Track your life on-chain</p>
+    <h1 style="font-size: 1.2rem; margin-bottom: 6px;">Onchain Activity</h1>
+    <p style="font-size: 0.8rem; color: #aaa;">Track your life on-chain</p>
   </header>
 
-  <div class="dashboard">
-    <div class="card">
-      👛<br><strong>Wallet</strong>
+  <section id="home" class="tab-section active">
+    <div class="dashboard">
+      <div class="action-card">👛<br><strong>Wallet</strong></div>
+      <div class="action-card">🎁<br><strong>Claim</strong></div>
+      <div class="action-card">📍<br><strong>Track</strong></div>
     </div>
-    <div class="card">
-      🎁<br><strong>Claim</strong>
+    <div class="overview">
+      <h3>📊 Overview</h3>
+      <p>This is your dashboard. All info loads here depending on tab.</p>
     </div>
-    <div class="card">
-      📍<br><strong>Track</strong>
-    </div>
-  </div>
+  </section>
 
-  <div class="dashboard">
-    <div class="card">
-      ⛽ Gas / Fee
-      <div class="metric">
-        <span id="gas-text">Fast: -- Gwei</span>
-        <div class="progress"><div id="gas-bar" class="progress-bar" style="background: linear-gradient(to right, green, yellow); width: 0%;"></div></div>
-      </div>
+  <section id="track" class="tab-section">
+    <div class="placeholder">
+      <h3>📈 Tracking</h3>
+      <p>Input wallet address to view historical data, fees, mints etc.</p>
     </div>
-    <div class="card">
-      🎯 XP
-      <div class="metric">
-        Streak: 3d<br>XP: 120
-        <div class="progress"><div style="width: 25%; background: linear-gradient(to right, red, orange);" class="progress-bar"></div></div>
-      </div>
+  </section>
+
+  <section id="leader" class="tab-section">
+    <div class="placeholder">
+      <h3>🏆 Leaderboard</h3>
+      <p>Top active users, streak rewards, early supporter badges</p>
     </div>
-    <div class="card">
-      🔍 Activity
-      <div class="metric">
-        Latest: 6 tx
-        <div class="progress"><div style="width: 30%; background: linear-gradient(to right, #3B82F6, #60A5FA);" class="progress-bar"></div></div>
-      </div>
+  </section>
+
+  <section id="profile" class="tab-section">
+    <div class="placeholder">
+      <h3>👤 Profile</h3>
+      <p>Connect wallet, view stats, customize username & vibes</p>
     </div>
-  </div>
+  </section>
 
   <nav>
-    <a href="#" class="active">🏠<br>Home</a>
-    <a href="#">📈<br>Track</a>
-    <a href="#">🏆<br>Leader</a>
-    <a href="#">👤<br>Profile</a>
+    <a href="#" onclick="switchTab('home')" class="active">🏠<br>Home</a>
+    <a href="#" onclick="switchTab('track')">📈<br>Track</a>
+    <a href="#" onclick="switchTab('leader')">🏆<br>Leader</a>
+    <a href="#" onclick="switchTab('profile')">👤<br>Profile</a>
   </nav>
 
   <script>
-    async function updateGas() {
-      try {
-        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-        const data = await res.json();
-        const fee = data.speeds[1].estimatedFee.toFixed(1);
-        const gasBar = document.getElementById('gas-bar');
-        const gasText = document.getElementById('gas-text');
-        gasText.textContent = `Fast: ${fee} Gwei`;
-        gasBar.style.width = `${Math.min(fee, 100)}%`;
-        gasBar.style.background = fee < 30 ? 'green' : fee < 70 ? 'orange' : 'red';
-      } catch (e) {
-        console.error('Failed to load gas data', e);
-      }
+    function switchTab(id) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      [...document.querySelectorAll('nav a')].find(a => a.innerHTML.includes(id.charAt(0).toUpperCase())).classList.add('active');
     }
-
-    updateGas();
-    setInterval(updateGas, 30000);
   </script>
 </body>
 </html>
