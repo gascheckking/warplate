@@ -32,18 +32,7 @@
     #brand {
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 4px;
-    }
-
-    h1 {
-      font-size: 1.2rem;
-      margin: 0;
-    }
-
-    p {
-      font-size: 0.75rem;
-      margin: 4px 0 12px;
-      color: #aaa;
+      margin-bottom: 8px;
     }
 
     .dashboard {
@@ -58,11 +47,7 @@
       border-radius: 12px;
       padding: 10px;
       text-align: center;
-      font-size: 0.75rem;
-    }
-
-    .metric-group {
-      margin-top: 6px;
+      font-size: 0.7rem;
     }
 
     .metric {
@@ -70,11 +55,12 @@
       border-radius: 8px;
       padding: 6px;
       font-size: 0.65rem;
+      margin-top: 6px;
     }
 
     .metric-title {
       font-size: 0.65rem;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .progress {
@@ -92,9 +78,9 @@
     .overview {
       background: var(--card);
       border-radius: 12px;
-      padding: 12px;
-      margin: 12px 0 72px;
-      font-size: 0.75rem;
+      padding: 16px;
+      margin: 12px 0 80px;
+      font-size: 0.8rem;
     }
 
     nav {
@@ -107,14 +93,14 @@
       display: flex;
       justify-content: space-around;
       background: var(--bg);
-      padding: 10px 0;
+      padding: 12px 0;
       border-top: 1px solid #222;
     }
 
     nav a {
       color: #666;
       text-decoration: none;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       text-align: center;
     }
 
@@ -126,54 +112,53 @@
 <body>
   <header>
     <div id="brand">WarpAI</div>
-    <h1>Onchain Activity</h1>
-    <p>Track your life on-chain</p>
+    <h1 style="font-size: 1.2rem; margin: 0">Onchain Tracker</h1>
+    <p style="font-size: 0.75rem; margin-top: 4px; color: #aaa">Your life on chain</p>
   </header>
 
   <div class="dashboard">
     <div class="action-card">
-      <div>👛<br><strong>Wallet</strong></div>
-      <div class="metric-group">
-        <div class="metric">
-          <div class="metric-title">⛽ Gas / Fee</div>
-          <div class="progress"><div class="progress-bar" style="width:30%;background:linear-gradient(to right,#10B981,#F59E0B)"></div></div>
-          <div style="margin-top:2px;opacity:0.75">Fast: 12 Gwei</div>
+      👛 Wallet
+      <div class="metric">
+        <div class="metric-title">⛽ Gas Fee</div>
+        <div class="progress">
+          <div class="progress-bar" style="width: 22%; background: linear-gradient(90deg, #10B981, #F59E0B)"></div>
         </div>
+        <div style="opacity: 0.6; font-size: 0.6rem;">12 gwei</div>
       </div>
     </div>
-
     <div class="action-card">
-      <div>🎁<br><strong>Claim</strong></div>
-      <div class="metric-group">
-        <div class="metric">
-          <div class="metric-title">🎯 XP Streak</div>
-          <div class="progress"><div class="progress-bar" style="width:25%;background:linear-gradient(to right,#EF4444,#F59E0B)"></div></div>
-          <div style="margin-top:2px;opacity:0.75">3d | 120 XP</div>
+      🎁 Claim
+      <div class="metric">
+        <div class="metric-title">🔥 XP Streak</div>
+        <div class="progress">
+          <div class="progress-bar" style="width: 30%; background: linear-gradient(90deg, #EF4444, #F59E0B)"></div>
         </div>
+        <div style="opacity: 0.6; font-size: 0.6rem;">3d / 120 XP</div>
       </div>
     </div>
-
     <div class="action-card">
-      <div>📍<br><strong>Track</strong></div>
-      <div class="metric-group">
-        <div class="metric">
-          <div class="metric-title">🔍 Activity</div>
-          <div class="progress"><div class="progress-bar" style="width:40%;background:linear-gradient(to right,#3B82F6,#60A5FA)"></div></div>
-          <div style="margin-top:2px;opacity:0.75">6 transactions</div>
+      📍 Track
+      <div class="metric">
+        <div class="metric-title">🔍 Activity</div>
+        <div class="progress">
+          <div class="progress-bar" style="width: 40%; background: linear-gradient(90deg, #3B82F6, #60A5FA)"></div>
         </div>
+        <div style="opacity: 0.6; font-size: 0.6rem;">6 tx last 24h</div>
       </div>
     </div>
   </div>
 
   <div class="overview">
-    <h3>📊 Overview</h3>
-    <p>This box will change content depending on tab selection.</p>
+    <h3 style="margin-bottom: 6px;">📊 Overview</h3>
+    <p>This section updates based on selected tab: Wallet | Claim | Track | Leaderboard</p>
   </div>
 
   <nav>
     <a href="#" class="active">🏠<br>Home</a>
     <a href="#">📈<br>Track</a>
-    <a href="#">🏆<br>Leader</a>
+    <a href="#">🎯<br>Rewards</a>
+    <a href="#">🏆<br>Leaderboard</a>
     <a href="#">👤<br>Profile</a>
   </nav>
 </body>
