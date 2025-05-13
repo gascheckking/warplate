@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WarpAI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
   <style>
     :root {
       --primary: #7A5FFF;
@@ -14,66 +14,86 @@
       --accent: #10B981;
       --warning: #F59E0B;
     }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, sans-serif;
-      margin: 0 auto;
+      font-family: 'Inter', sans-serif;
       max-width: 420px;
-      padding: 0 12px;
+      margin: 0 auto;
+      padding: 0 12px 100px;
     }
+
     header {
       text-align: center;
-      padding: 20px 0 12px;
+      padding: 20px 0 10px;
     }
+
     #brand {
       font-weight: 700;
-      font-size: 1rem;
       color: var(--primary);
-      letter-spacing: -0.4px;
+      margin-bottom: 4px;
     }
+
     h1 {
-      font-size: 1.25rem;
-      margin-bottom: 0.3rem;
+      font-size: 1.3rem;
+      margin: 0;
     }
+
     p {
       font-size: 0.75rem;
       color: #aaa;
-      margin: 0;
+      margin-bottom: 16px;
     }
-    .dashboard {
+
+    .row {
       display: flex;
       justify-content: space-between;
       gap: 6px;
-      margin: 12px 0;
+      margin-bottom: 10px;
     }
+
     .card {
+      flex: 1;
       background: var(--card);
       border-radius: 10px;
       padding: 10px;
       text-align: center;
-      font-size: 0.75rem;
-      flex: 1;
+      font-size: 0.7rem;
     }
+
+    .card strong {
+      font-size: 0.8rem;
+    }
+
     .metric {
-      background: #121212;
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.04);
+      padding: 6px;
       border-radius: 6px;
       margin-top: 6px;
-      padding: 6px;
-      font-size: 0.65rem;
     }
-    .progress {
+
+    .meter {
       height: 4px;
       background: #333;
       border-radius: 2px;
-      margin-top: 6px;
+      margin-top: 4px;
       overflow: hidden;
     }
-    .progress-bar {
+
+    .bar {
       height: 100%;
-      width: 20%;
-      transition: width 0.3s ease;
     }
+
+    .overview {
+      margin-top: 16px;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.75rem;
+    }
+
     nav {
       position: fixed;
       bottom: 0;
@@ -84,16 +104,20 @@
       display: flex;
       justify-content: space-around;
       background: var(--bg);
-      border-top: 1px solid #222;
       padding: 10px 0;
+      border-top: 1px solid #333;
     }
+
     nav a {
-      font-size: 0.7rem;
       color: #999;
+      text-decoration: none;
+      font-size: 0.65rem;
       text-align: center;
     }
+
     nav a.active {
       color: var(--primary);
+      font-weight: 600;
     }
   </style>
 </head>
@@ -104,7 +128,7 @@
     <p>Track your life on-chain</p>
   </header>
 
-  <div class="dashboard">
+  <div class="row">
     <div class="card">
       👛<br><strong>Wallet</strong>
     </div>
@@ -116,28 +140,24 @@
     </div>
   </div>
 
-  <div class="dashboard">
-    <div class="card">
-      ⛽ Gas / Fee
-      <div class="metric">
-        <span id="gas-text">Fast: -- Gwei</span>
-        <div class="progress"><div id="gas-bar" class="progress-bar" style="background: linear-gradient(to right, green, yellow); width: 0%;"></div></div>
-      </div>
+  <div class="row">
+    <div class="card metric">
+      ⛽ GAS <br><small>12 Gwei</small>
+      <div class="meter"><div class="bar" style="width: 30%; background: linear-gradient(to right, #10B981, #F59E0B)"></div></div>
     </div>
-    <div class="card">
-      🎯 XP
-      <div class="metric">
-        Streak: 3d<br>XP: 120
-        <div class="progress"><div style="width: 25%; background: linear-gradient(to right, red, orange);" class="progress-bar"></div></div>
-      </div>
+    <div class="card metric">
+      ⚡ XP <br><small>120 XP</small>
+      <div class="meter"><div class="bar" style="width: 25%; background: linear-gradient(to right, #EF4444, #F59E0B)"></div></div>
     </div>
-    <div class="card">
-      🔍 Activity
-      <div class="metric">
-        Latest: 6 tx
-        <div class="progress"><div style="width: 30%; background: linear-gradient(to right, #3B82F6, #60A5FA);" class="progress-bar"></div></div>
-      </div>
+    <div class="card metric">
+      🔍 Activity<br><small>6 tx</small>
+      <div class="meter"><div class="bar" style="width: 40%; background: linear-gradient(to right, #3B82F6, #60A5FA)"></div></div>
     </div>
+  </div>
+
+  <div class="overview">
+    <h3>📊 Overview</h3>
+    <p>This will update depending on which tab you select below. Use it to track insights, tips, or claim info.</p>
   </div>
 
   <nav>
@@ -146,25 +166,5 @@
     <a href="#">🏆<br>Leader</a>
     <a href="#">👤<br>Profile</a>
   </nav>
-
-  <script>
-    async function updateGas() {
-      try {
-        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-        const data = await res.json();
-        const fee = data.speeds[1].estimatedFee.toFixed(1);
-        const gasBar = document.getElementById('gas-bar');
-        const gasText = document.getElementById('gas-text');
-        gasText.textContent = `Fast: ${fee} Gwei`;
-        gasBar.style.width = `${Math.min(fee, 100)}%`;
-        gasBar.style.background = fee < 30 ? 'green' : fee < 70 ? 'orange' : 'red';
-      } catch (e) {
-        console.error('Failed to load gas data', e);
-      }
-    }
-
-    updateGas();
-    setInterval(updateGas, 30000);
-  </script>
 </body>
 </html>
