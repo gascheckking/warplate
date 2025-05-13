@@ -1,150 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WarpAI | Onchain Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <style>
-    :root {
-      --bg: #0d0d0d;
-      --text: #ffffff;
-      --accent: #6E6EDE;
-      --box: #1a1a1a;
-    }
-    
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      padding-bottom: 80px;
-      max-width: 420px;
-      margin: auto;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WarpAI | Track Your Life Onchain</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0d0d0d;
+        color: #f1f1f1;
+        font-family: 'Inter', sans-serif;
+        max-width: 430px;
+        margin-inline: auto;
+      }
+      header {
+        text-align: center;
+        padding: 24px 12px 8px;
+      }
+      .logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        margin-inline: auto;
+        margin-bottom: 8px;
+        background: url('/logo.png') no-repeat center/cover;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin: 0;
+      }
+      p.slogan {
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 4px;
+      }
+      .quick-actions {
+        display: flex;
+        justify-content: space-around;
+        padding: 16px;
+      }
+      .quick-actions button {
+        flex: 1;
+        margin: 0 6px;
+        padding: 12px;
+        background-color: #1c1c1c;
+        border: 1px solid #444;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 12px;
+        font-size: 0.9rem;
+      }
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        padding-inline: 16px;
+        gap: 8px;
+      }
+      .card {
+        flex: 1;
+        padding: 12px;
+        background-color: #181818;
+        border-radius: 16px;
+        margin-top: 8px;
+      }
+      .card h2 {
+        font-size: 1rem;
+        margin: 0 0 6px;
+      }
+      .card p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #bbb;
+      }
+      .main-content {
+        padding: 16px;
+      }
+      .main-block {
+        background-color: #1a1a1a;
+        padding: 18px;
+        border-radius: 18px;
+        text-align: center;
+        margin-top: 12px;
+      }
+      .main-block h2 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+      .main-block p {
+        font-size: 0.8rem;
+        color: #888;
+      }
+      nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-around;
+        background-color: #111;
+        border-top: 1px solid #222;
+        padding: 10px 0;
+        max-width: 430px;
+        margin-inline: auto;
+      }
+      nav button {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 0.8rem;
+        text-align: center;
+      }
+      nav button span {
+        display: block;
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo"></div>
+      <h1>WarpAI</h1>
+      <p class="slogan">Track your life onchain</p>
+    </header>
 
-    header {
-      text-align: center;
-      margin: 24px 0;
-    }
-    .logo-img {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 6px;
-    }
-    .tagline {
-      font-size: 1.2rem;
-      opacity: 0.8;
-    }
-
-    .top-actions {
-      display: flex;
-      justify-content: space-around;
-      margin: 16px 0;
-    }
-    .top-actions button {
-      flex: 1;
-      margin: 0 6px;
-      font-size: 0.9rem;
-      padding: 10px;
-      border-radius: 12px;
-      background-color: var(--box);
-      color: var(--text);
-    }
-
-    .mini-boxes {
-      display: flex;
-      justify-content: space-around;
-      margin: 12px;
-    }
-    .mini-boxes .card {
-      width: 48%;
-      background: var(--box);
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 0.85rem;
-    }
-
-    .main-content {
-      background-color: var(--box);
-      margin: 16px;
-      border-radius: 16px;
-      padding: 16px;
-      font-size: 0.9rem;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #111;
-      display: flex;
-      justify-content: space-around;
-      border-top: 1px solid #333;
-      padding: 10px 0;
-      max-width: 420px;
-      margin: auto;
-    }
-    .bottom-nav button {
-      background: none;
-      border: none;
-      color: #aaa;
-      font-size: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .bottom-nav .active {
-      color: var(--accent);
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="/logo.svg" alt="WarpAI Logo" class="logo-img">
-    <h2>WarpAI</h2>
-    <p class="tagline">Track your life onchain</p>
-  </header>
-
-  <section class="top-actions">
-    <button>👜 Wallet</button>
-    <button>🎁 Claim</button>
-    <button>📍 Track</button>
-  </section>
-
-  <section class="mini-boxes">
-    <div class="card">
-      <strong>⛽ Gas</strong>
-      <p>Loading...</p>
+    <div class="quick-actions">
+      <button>👜 Wallet</button>
+      <button>🎁 Claim</button>
+      <button>📍 Track</button>
     </div>
-    <div class="card">
-      <strong>🔥 Activity</strong>
-      <p>Streak: 1d | XP: 100</p>
+
+    <div class="status-row">
+      <div class="card">
+        <h2>⛽ Gas</h2>
+        <p>Loading...</p>
+      </div>
+      <div class="card">
+        <h2>🔥 Activity</h2>
+        <p>Streak: 1d | XP: 100</p>
+      </div>
     </div>
-  </section>
 
-  <section class="main-content">
-    <h4>📊 Stats</h4>
-    <p>This area updates based on selected tab.</p>
-  </section>
+    <div class="main-content">
+      <div class="main-block">
+        <h2>📊 Stats</h2>
+        <p>This area updates based on selected tab.</p>
+      </div>
+    </div>
 
-  <nav class="bottom-nav">
-    <button class="active">
-      <span>🏠</span>
-      <small>Home</small>
-    </button>
-    <button>
-      <span>📈</span>
-      <small>Stats</small>
-    </button>
-    <button>
-      <span>🏆</span>
-      <small>Leaders</small>
-    </button>
-    <button>
-      <span>⚙️</span>
-      <small>Settings</small>
-    </button>
-  </nav>
-</body>
+    <nav>
+      <button><span>🏠</span>Home</button>
+      <button><span>📈</span>Stats</button>
+      <button><span>🏆</span>Leaders</button>
+      <button><span>⚙️</span>Settings</button>
+    </nav>
+  </body>
 </html>
