@@ -26,27 +26,13 @@
 
     header {
       text-align: center;
-      padding: 20px 0 10px;
+      padding: 20px 0 15px;
     }
 
     #brand {
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 4px;
-      font-size: 1.1rem;
-    }
-
-    h1 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #ccc;
-      margin-bottom: 6px;
-    }
-
-    p {
-      font-size: 0.75rem;
-      color: #777;
-      margin-top: 0;
+      margin-bottom: 8px;
     }
 
     .dashboard {
@@ -59,39 +45,30 @@
     .action-card {
       background: var(--card);
       border-radius: 12px;
-      padding: 10px 8px;
+      padding: 12px;
       text-align: center;
-    }
-
-    .action-card div:first-child {
-      font-size: 1.25rem;
-      margin-bottom: 4px;
-    }
-
-    .action-card strong {
-      font-size: 0.7rem;
     }
 
     .metric-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
     .metric {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.05);
       border-radius: 8px;
-      padding: 6px;
-      font-size: 0.7rem;
+      padding: 8px;
+      font-size: 0.75rem;
     }
 
     .metric-title {
       display: flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.65rem;
-      margin-bottom: 3px;
+      font-size: 0.7rem;
+      margin-bottom: 4px;
     }
 
     .progress {
@@ -109,9 +86,9 @@
     .overview {
       background: var(--card);
       border-radius: 12px;
-      padding: 14px;
-      margin: 10px 0 80px;
-      font-size: 0.8rem;
+      padding: 16px;
+      margin: 16px 0 80px;
+      font-size: 0.85rem;
     }
 
     nav {
@@ -155,11 +132,11 @@
       <strong>Wallet</strong>
       <div class="metric-group">
         <div class="metric">
-          <div class="metric-title">⛽ Gas / Fee</div>
+          <div class="metric-title">⛽ GAS / FEE</div>
           <div class="progress">
-            <div class="progress-bar" style="width: 30%; background: linear-gradient(90deg, #10B981, #F59E0B, #EF4444)"></div>
+            <div class="progress-bar" id="gas-bar"></div>
           </div>
-          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;">Fast: 12 Gwei</div>
+          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;" id="gas-info">Fast: --</div>
         </div>
       </div>
     </div>
@@ -172,9 +149,9 @@
         <div class="metric">
           <div class="metric-title">🎯 XP Streak</div>
           <div class="progress">
-            <div class="progress-bar" style="width: 25%; background: linear-gradient(90deg, #EF4444, #F59E0B, #7A5FFF)"></div>
+            <div class="progress-bar" id="xp-bar"></div>
           </div>
-          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;">3d | 120 XP</div>
+          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;" id="xp-info">3d | 120 XP</div>
         </div>
       </div>
     </div>
@@ -187,9 +164,9 @@
         <div class="metric">
           <div class="metric-title">🔍 Activity</div>
           <div class="progress">
-            <div class="progress-bar" style="width: 40%; background: linear-gradient(90deg, #3B82F6, #06B6D4)"></div>
+            <div class="progress-bar" id="activity-bar"></div>
           </div>
-          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;">6 transactions</div>
+          <div style="font-size: 0.65rem; opacity: 0.8; margin-top: 4px;" id="activity-info">6 transactions</div>
         </div>
       </div>
     </div>
@@ -197,14 +174,24 @@
 
   <div class="overview">
     <h3>📊 Overview</h3>
-    <p>This box will change content depending on tab selection.</p>
+    <p id="overview-content">This box will change content depending on tab selection.</p>
   </div>
 
   <nav>
-    <a href="#" class="active">🏠<br>Home</a>
-    <a href="#">📈<br>Track</a>
-    <a href="#">🏆<br>Leader</a>
-    <a href="#">👤<br>Profile</a>
+    <a href="#" class="active" onclick="setTab('Home')">🏠<br>Home</a>
+    <a href="#" onclick="setTab('Track')">📈<br>Track</a>
+    <a href="#" onclick="setTab('Leader')">🏆<br>Leader</a>
+    <a href="#" onclick="setTab('Profile')">👤<br>Profile</a>
   </nav>
+
+  <script>
+    function setTab(tab) {
+      const content = document.getElementById("overview-content");
+      if (tab === 'Track') content.textContent = "Tracking wallet activity...";
+      else if (tab === 'Leader') content.textContent = "Viewing leaderboard stats...";
+      else if (tab === 'Profile') content.textContent = "User settings and identity.";
+      else content.textContent = "This box will change content depending on tab selection.";
+    }
+  </script>
 </body>
 </html>
