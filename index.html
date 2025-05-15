@@ -1,247 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WarpAI | Onchain Activity</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <style>
     :root {
-      --primary: #7A5FFF;
-      --text: #f1f1f1;
-      --text-light: #aaa;
       --bg: #0d0d0d;
+      --text: #e5e5e5;
       --card: #1a1a1a;
-      --accent: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --border: #333;
+      --accent: #6366f1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #2a2a2a;
     }
-    * { box-sizing: border-box; }
+
     body {
-      margin: 0 auto; padding: 0 16px 80px;
-      max-width: 440px; background: var(--bg); color: var(--text);
-      font-family: 'Inter', sans-serif; line-height: 1.4;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 0 1rem 6rem;
+      max-width: 460px;
+      margin-inline: auto;
     }
-    header { text-align: center; padding: 24px 0 8px; }
-    #brand { color: var(--primary); font-weight:700; font-size:1.3rem; }
-    h1 { margin:4px 0; font-size:1.4rem; color:#ddd; }
-    p.subtitle { margin:0; font-size:0.9rem; color:var(--text-light); }
-    .tab-section { display:none; animation:fadeIn 0.3s ease; }
-    .tab-section.active { display:block; }
-    .dashboard {
-      display:grid; grid-template-columns:repeat(3,1fr);
-      gap:10px; margin:20px 0;
+
+    header {
+      text-align: center;
+      padding: 1rem 0;
     }
-    .action-card {
-      background:var(--card); border-radius:12px;
-      padding:14px; text-align:center; font-size:0.9rem;
-      cursor:pointer; transition:all .2s ease;
+
+    h1 {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
     }
-    .action-card:hover { background:#262626; transform:translateY(-2px); }
-    .metric { margin-top:6px; font-size:0.8rem; color:var(--text-light); min-height:18px; }
+
+    p {
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
     .progress {
-      margin-top:6px; height:5px; background:var(--border);
-      border-radius:3px; overflow:hidden;
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      overflow: hidden;
     }
-    .bar { height:100%; transition:width .4s ease; }
-    .overview {
-      background:var(--card); border-radius:12px;
-      padding:16px; margin-bottom:16px;
-      border:1px solid var(--border);
+
+    .bar {
+      height: 100%;
+      transition: width 0.4s ease;
     }
+
+    section.overview {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
     nav {
-      position:fixed; bottom:0; left:0; right:0;
-      max-width:440px; margin:0 auto;
-      display:flex; justify-content:space-around;
-      background:var(--bg); padding:12px 0;
-      border-top:1px solid var(--border); z-index:10;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 460px;
+      margin-inline: auto;
+      background: var(--bg);
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid var(--border);
+      padding: 0.5rem 0;
     }
+
     nav a {
-      color:var(--text-light); font-size:0.85rem;
-      text-decoration:none; text-align:center;
-      transition:all .2s ease;
+      color: #bbb;
+      font-size: 0.75rem;
+      text-align: center;
+      text-decoration: none;
     }
-    nav a.active { color:var(--primary); font-weight:600; }
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(5px); }
-      to { opacity:1; transform:translateY(0); }
+
+    nav a.active {
+      color: var(--accent);
+      font-weight: bold;
     }
-    button, a.btn {
-      display:block; width:100%; text-align:center;
-      margin-top:8px; padding:10px;
-      border:none; border-radius:8px;
-      background:var(--primary); color:var(--bg);
-      font-size:0.95rem; cursor:pointer;
-      text-decoration:none; transition:all .2s ease;
+
+    @media (max-width: 360px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
-    button:hover, a.btn:hover { transform:scale(1.02); }
-    /* Små flödesjusteringar */
-    .stats-list { padding-left:20px; margin-top:8px; }
   </style>
 </head>
 <body>
   <header>
-    <div id="brand">WarpAI</div>
-    <h1>Onchain Activity</h1>
-    <p class="subtitle">Track your wallet, XP & gas fees</p>
+    <h1>WarpAI</h1>
+    <p>Spåra gas, XP, och belöningar i realtid</p>
   </header>
 
-  <main>
-    <!-- HOME TAB -->
-    <section id="home" class="tab-section active">
-      <div class="dashboard">
-        <div class="action-card" onclick="loadGas()">
-          👛<br><strong>Wallet</strong>
-          <div id="gasInfo" class="metric">Tap to load gas</div>
-          <div class="progress"><div id="gasBar" class="bar" style="width:0%;background:var(--accent)"></div></div>
+  <main id="homeTab">
+    <div class="grid">
+      <div class="card" onclick="loadGas()">
+        <div>⛽</div>
+        <strong>Gaspris</strong>
+        <div class="progress">
+          <div id="gasBar" class="bar" style="width:0%;background:var(--warning);"></div>
         </div>
-        <div class="action-card" onclick="claimXP()">
-          🎁<br><strong>Claim</strong>
-          <div id="xpInfo" class="metric">Tap to claim XP</div>
-          <div class="progress"><div id="xpBar" class="bar" style="width:0%;background:var(--warning)"></div></div>
+        <div id="gasInfo">Tryck för gas</div>
+      </div>
+
+      <div class="card" onclick="claimXP()">
+        <div>🎁</div>
+        <strong>Hämta XP</strong>
+        <div class="progress">
+          <div id="xpBar" class="bar" style="width:0%;background:var(--success);"></div>
         </div>
-        <div class="action-card" onclick="showSnapshot()">
-          📍<br><strong>Track</strong>
-          <div class="metric">Snapshot your XP</div>
-        </div>
+        <div id="xpInfo">Tryck för XP</div>
       </div>
-      <div class="overview">
-        <h3>📊 Overview</h3>
-        <p id="overviewText">Your activity will show up here after interacting.</p>
-      </div>
+    </div>
+
+    <section class="overview">
+      <h3>🪙 Warp Token</h3>
+      <p><strong>Symbol:</strong> $WARP<br>
+         <strong>Contract:</strong> 0x0cd1...0482</p>
+      <a href="https://zora.co/collect/base:0x0cd1e9c691af8d4d34efcc089a40b31c691d0482" target="_blank" role="button">Köp på Zora</a>
     </section>
 
-    <!-- TRACK TAB -->
-    <section id="track" class="tab-section">
-      <div class="overview">
-        <h3>📈 Tracking</h3>
-        <p id="trackData">Transactions: 12<br>Gas Spent: 0.0021 ETH<br>Active Days: 4/7</p>
-      </div>
+    <section class="overview">
+      <h3>🎖️ Dina Belöningar</h3>
+      <p id="rewardStatus">Tryck nedan för att kolla</p>
+      <button onclick="checkToken()">Kolla supporterstatus</button>
     </section>
 
-    <!-- STATS TAB (Leaderboard + Rewards) -->
-    <section id="stats" class="tab-section">
-      <div class="overview">
-        <h3>🏆 Leaderboard</h3>
-        <ol class="stats-list" id="leaderboard">
-          <li>@crypto_og — 1 420 XP</li>
-          <li>@degen — 1 205 XP</li>
-          <li>@you — 900 XP</li>
-        </ol>
-      </div>
-      <div class="overview">
-        <h3>🎖️ Your Rewards</h3>
-        <p id="rewardStatus">Connect wallet to check status</p>
-        <button onclick="checkToken()">Check Supporter</button>
-      </div>
-    </section>
-
-    <!-- TOKEN TAB -->
-    <section id="token" class="tab-section">
-      <div class="overview">
-        <h3>🔗 Warp Token</h3>
-        <p>
-          <strong>Symbol:</strong> $WARP<br>
-          <strong>Contract:</strong> 0x0cd1…0482
-        </p>
-        <a class="btn" href="https://zora.co/collect/base:0x0cd1e9c691af8d4d34efcc089a40b31c691d0482" target="_blank">
-          Buy on Zora
-        </a>
-      </div>
-    </section>
-
-    <!-- PROFILE TAB -->
-    <section id="profile" class="tab-section">
-      <div class="overview">
-        <h3>👤 Profile</h3>
-        <p id="profileInfo">Connect wallet to view stats</p>
-        <button onclick="connectWallet()">Connect Wallet</button>
-      </div>
+    <section class="overview">
+      <h3>📊 Översikt</h3>
+      <p id="overviewText">Inget än – gör något!</p>
     </section>
   </main>
 
   <nav>
-    <a href="#" onclick="switchTab('home')" class="active">🏠<br>Home</a>
-    <a href="#" onclick="switchTab('track')">📈<br>Track</a>
-    <a href="#" onclick="switchTab('stats')">📊<br>Stats</a>
-    <a href="#" onclick="switchTab('token')">🔗<br>Token</a>
-    <a href="#" onclick="switchTab('profile')">👤<br>Profile</a>
+    <a href="#" class="active" onclick="switchTab('homeTab')">🏠 Hem</a>
+    <a href="#" onclick="switchTab('trackTab')">📈 Track</a>
+    <a href="#" onclick="switchTab('rewardsTab')">🎁 Rewards</a>
+    <a href="#" onclick="switchTab('statsTab')">📊 Stats</a>
+    <a href="#" onclick="switchTab('profileTab')">👤 Profil</a>
   </nav>
 
   <script>
-    function switchTab(id) {
-      document.querySelectorAll('.tab-section').forEach(s=>s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
-      document.querySelector(`nav a[onclick*="${id}"]`).classList.add('active');
-    }
+    const state = {
+      xp: 0,
+      streak: 0,
+      walletConnected: false
+    };
 
     async function loadGas() {
-      document.getElementById('gasInfo').innerText='Loading…';
-      try {
-        const res = await fetch('/api/gas');
-        const d = await res.json();
-        const gwei = d.base.speeds[1]?.gasPrice||20;
-        document.getElementById('gasBar').style.width='30%';
-        document.getElementById('gasInfo').innerHTML=`Fast: <strong>${gwei} Gwei</strong>`;
-        updateOverview(`Gas updated: ${gwei} Gwei`);
-      } catch {
-        document.getElementById('gasInfo').innerText='Error';
-      }
+      const res = await fetch("https://api.owlracle.info/v4/base/gas?apikey=demo");
+      const data = await res.json();
+      const gwei = data.speeds[1]?.gasPrice || 20;
+      document.getElementById("gasInfo").innerText = `Snabb: ${gwei} Gwei`;
+      document.getElementById("gasBar").style.width = "40%";
     }
 
     async function claimXP() {
-      const addr = prompt('Wallet address:');
-      if(!addr) return;
-      document.getElementById('xpInfo').innerText='Claiming…';
-      try {
-        const res = await fetch('/api/claim-xp',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({address:addr})
-        });
-        const d=await res.json();
-        const pct=Math.min(d.streak*10,100);
-        document.getElementById('xpBar').style.width=pct+'%';
-        document.getElementById('xpInfo').innerHTML=`${d.streak}d | ${d.xp} XP`;
-        updateOverview(`You claimed ${d.reward} XP!`);
-      } catch {
-        document.getElementById('xpInfo').innerText='Error';
-      }
-    }
-
-    function showSnapshot() {
-      const addr=prompt('Wallet address:');
-      if(!addr) return;
-      window.open(`/api/snapshot/${addr}`,'_blank');
-      updateOverview('Snapshot opened');
+      state.streak++;
+      state.xp += 100;
+      document.getElementById("xpInfo").innerText = `${state.streak} dagar | ${state.xp} XP`;
+      document.getElementById("xpBar").style.width = Math.min(state.streak * 10, 100) + "%";
+      document.getElementById("overviewText").innerText = `🎉 Du fick 100 XP!`;
     }
 
     async function checkToken() {
-      const addr=prompt('Wallet address:');
-      if(!addr) return;
-      document.getElementById('rewardStatus').innerText='Checking…';
-      try {
-        const res=await fetch(`/api/check-token?address=${addr}`);
-        const d=await res.json();
-        document.getElementById('rewardStatus').innerText=
-          d.eligibleForRewards
-            ? `✅ Early supporter since ${d.ogSince}`
-            : '❌ No token found';
-      } catch {
-        document.getElementById('rewardStatus').innerText='Error';
-      }
+      const eligible = Math.random() > 0.5;
+      const rewardText = eligible
+        ? "✅ Early Supporter – grattis!"
+        : "❌ Ingen Warp-token hittad.";
+      document.getElementById("rewardStatus").innerText = rewardText;
     }
 
-    function connectWallet() {
-      const addr=prompt('Wallet address:');
-      if(!addr) return;
-      document.getElementById('profileInfo').innerText=`Connected: ${addr.substr(0,6)}…${addr.slice(-4)}`;
+    function switchTab(id) {
+      document.querySelectorAll('main').forEach(m => m.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      event.target.classList.add('active');
     }
 
-    function updateOverview(msg){
-      document.getElementById('overviewText').innerText=msg;
-    }
+    // Init
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('main').forEach(m => m.style.display = 'none');
+      document.getElementById("homeTab").style.display = 'block';
+    });
   </script>
 </body>
 </html>
