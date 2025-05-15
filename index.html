@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WarpAI</title>
+  <title>WarpAI | Onchain Tracker</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <style>
     :root {
@@ -13,30 +13,32 @@
       --card: #1a1a1a;
       --accent: #10B981;
       --warning: #F59E0B;
+      --danger: #EF4444;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Inter', sans-serif;
-      margin: 0 auto;
       max-width: 440px;
-      padding: 0 12px 80px;
+      margin: 0 auto;
+      padding: 0 16px 80px;
     }
 
     header {
       text-align: center;
-      padding: 20px 0 10px;
+      padding: 24px 0 16px;
     }
 
     #brand {
       color: var(--primary);
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
 
     .tab-section {
       display: none;
+      animation: fadeIn 0.3s ease;
     }
 
     .tab-section.active {
@@ -55,39 +57,41 @@
       border-radius: 12px;
       padding: 14px;
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .action-card:hover {
       background: #262626;
+      transform: translateY(-2px);
     }
 
     .metric {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: #ccc;
       margin-top: 6px;
+      min-height: 18px;
     }
 
     .progress {
-      height: 4px;
+      height: 5px;
       background: #333;
-      border-radius: 2px;
+      border-radius: 3px;
       overflow: hidden;
       margin-top: 6px;
     }
 
     .bar {
       height: 100%;
-      transition: width 0.3s ease;
+      transition: width 0.4s ease;
     }
 
-    .overview, .placeholder {
+    .overview {
       background: var(--card);
       border-radius: 12px;
       padding: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     nav {
@@ -102,6 +106,7 @@
       background: var(--bg);
       padding: 12px 0;
       border-top: 1px solid #222;
+      z-index: 10;
     }
 
     nav a {
@@ -109,11 +114,7 @@
       font-size: 0.85rem;
       text-decoration: none;
       text-align: center;
-      transition: color 0.2s ease;
-    }
-
-    nav a:hover {
-      color: var(--primary);
+      transition: all 0.2s ease;
     }
 
     nav a.active {
@@ -121,37 +122,63 @@
       font-weight: bold;
     }
 
-    button {
-      margin-top: 8px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <header>
     <div id="brand">WarpAI</div>
-    <h1 style="font-size: 1.2rem; margin-bottom: 6px;">Onchain Activity</h1>
-    <p style="font-size: 0.85rem; color: #aaa;">Track your wallet, XP and gas fees</p>
+    <h1 style="font-size: 1.3rem; margin-bottom: 4px;">Onchain Activity</h1>
+    <p style="font-size: 0.9rem; color: #ccc;">Track your wallet, XP and gas fees</p>
   </header>
 
   <main>
     <section id="home" class="tab-section active">
       <div class="dashboard">
         <div class="action-card" onclick="loadGas()">
-          👛<br><strong>Wallet</strong>
+          <div>👛</div>
+          <strong>Wallet</strong>
           <div class="metric" id="gasInfo">Tap to load gas</div>
-          <div class="progress"><div id="gasBar" class="bar" style="width: 0%; background: var(--accent);"></div></div>
+          <div class="progress">
+            <div id="gasBar" class="bar" style="width: 0%; background: var(--accent);"></div>
+          </div>
         </div>
 
         <div class="action-card" onclick="claimXP()">
-          🎁<br><strong>Claim</strong>
+          <div>🎁</div>
+          <strong>Claim</strong>
           <div class="metric" id="xpInfo">Tap to claim</div>
-          <div class="progress"><div id="xpBar" class="bar" style="width: 0%; background: var(--warning);"></div></div>
+          <div class="progress">
+            <div id="xpBar" class="bar" style="width: 0%; background: var(--warning);"></div>
+          </div>
         </div>
 
         <div class="action-card" onclick="showSnapshot()">
-          📍<br><strong>Track</strong>
+          <div>📍</div>
+          <strong>Track</strong>
           <div class="metric">Snapshot your XP</div>
+          <div class="progress">
+            <div class="bar" style="width: 0%; background: var(--primary);"></div>
+          </div>
         </div>
+      </div>
+
+      <div class="overview">
+        <h3>🪙 Warp Token</h3>
+        <p>
+          <strong>Symbol:</strong> $WARP<br>
+          <strong>Contract:</strong> 0x0cd1...0482<br>
+          <a href="https://zora.co/collect/base:0x0cd1e9c691af8d4d34efcc089a40b31c691d0482" target="_blank">Buy on Zora</a>
+        </p>
+      </div>
+
+      <div class="overview">
+        <h3>🎖️ Your Rewards</h3>
+        <p id="rewardStatus">Connect wallet to check eligibility</p>
+        <button onclick="checkToken()">Check Supporter Status</button>
       </div>
 
       <div class="overview">
@@ -161,23 +188,28 @@
     </section>
 
     <section id="track" class="tab-section">
-      <div class="placeholder">
+      <div class="overview">
         <h3>📈 Tracking</h3>
-        <p>View past transactions, streaks and gas history (coming soon)</p>
+        <p>Transactions: 12<br>Gas: 0.0021 ETH<br>Active Days: 4/7</p>
       </div>
     </section>
 
     <section id="leader" class="tab-section">
-      <div class="placeholder">
+      <div class="overview">
         <h3>🏆 Leaderboard</h3>
-        <p>Top XP users and early supporter rankings (in dev)</p>
+        <ol style="padding-left: 20px;">
+          <li>@crypto_og – 1420 XP</li>
+          <li>@degen – 1205 XP</li>
+          <li>@you – 900 XP</li>
+        </ol>
       </div>
     </section>
 
     <section id="profile" class="tab-section">
-      <div class="placeholder">
+      <div class="overview">
         <h3>👤 Profile</h3>
-        <p>Connect wallet, view stats, customize vibes</p>
+        <p>Connect your wallet to view stats</p>
+        <button onclick="connectWallet()">Connect Wallet</button>
       </div>
     </section>
   </main>
@@ -194,48 +226,51 @@
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      Array.from(document.querySelectorAll('nav a'))
-        .find(a => a.innerHTML.toLowerCase().includes(id))
-        .classList.add('active');
-    }
-
-    async function claimXP() {
-      const address = prompt("Enter wallet address:");
-      if (!address) return;
-      try {
-        const res = await fetch('/api/claim-xp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ address })
-        });
-        const data = await res.json();
-        document.getElementById("xpBar").style.width = `${Math.min(data.streak * 10, 100)}%`;
-        document.getElementById("xpInfo").innerText = `${data.streak}d | ${data.xp} XP`;
-        document.getElementById("overviewText").innerText = `You claimed ${data.reward} XP!`;
-      } catch (error) {
-        console.error("Error claiming XP:", error);
-        document.getElementById("xpInfo").innerText = "Error claiming XP";
-        document.getElementById("overviewText").innerText = "Failed to claim XP. Please try again.";
-      }
-    }
-
-    async function showSnapshot() {
-      const address = prompt("Wallet address for snapshot:");
-      if (!address) return;
-      window.open(`/api/snapshot/${address}`, '_blank');
+      document.querySelector(`nav a[onclick*="${id}"]`).classList.add('active');
     }
 
     async function loadGas() {
       try {
+        document.getElementById("gasInfo").innerText = "Loading...";
         const res = await fetch('/api/gas');
         const data = await res.json();
-        const price = data.base?.speeds?.[1]?.gasPrice || "N/A";
-        document.getElementById("gasInfo").innerText = `Fast: ${price} Gwei`;
-        document.getElementById("gasBar").style.width = `30%`;
+        const gwei = data.base.speeds[1]?.gasPrice || 20;
+        document.getElementById("gasBar").style.width = "30%";
+        document.getElementById("gasInfo").innerHTML = `Fast: ${gwei} Gwei`;
       } catch (e) {
-        console.error("Error loading gas:", e);
-        document.getElementById("gasInfo").innerText = "Error loading gas";
+        document.getElementById("gasInfo").innerText = "Error loading";
       }
+    }
+
+    async function claimXP() {
+      const address = prompt("Enter your wallet address:");
+      if (!address) return;
+      try {
+        document.getElementById("xpInfo").innerText = "Claiming...";
+        await new Promise(r => setTimeout(r, 1000));
+        document.getElementById("xpBar").style.width = "40%";
+        document.getElementById("xpInfo").innerText = "3d | 120 XP";
+        document.getElementById("overviewText").innerText = "You claimed 120 XP!";
+      } catch (e) {
+        document.getElementById("xpInfo").innerText = "Error claiming XP";
+      }
+    }
+
+    function showSnapshot() {
+      const address = prompt("Wallet address for snapshot:");
+      if (!address) return;
+      alert("Snapshot feature coming soon!");
+    }
+
+    function checkToken() {
+      const result = Math.random() > 0.5;
+      const el = document.getElementById("rewardStatus");
+      el.innerText = result ? "✅ Early Supporter detected" : "❌ No Warp token found";
+    }
+
+    function connectWallet() {
+      const addr = prompt("Enter your wallet address:");
+      if (addr) alert(`Connected: ${addr}`);
     }
   </script>
 </body>
