@@ -1,85 +1,114 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WarpAI – Onchain Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WarpAI | Din Onchain-Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <style>
     :root {
-      --accent: #6366f1;
-      --bg: #0d0d0d;
-      --text: #e5e5e5;
-      --card: #1a1a1a;
-      --success: #10b981;
-      --warning: #f59e0b;
+      --accent: #7c3aed;
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #f1f1f1;
+      --subtle: #a0a0a0;
+      --highlight: #10b981;
     }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Segoe UI', sans-serif;
-      max-width: 440px;
+      max-width: 480px;
       margin: 0 auto;
-      padding-bottom: 80px;
+      font-family: system-ui, sans-serif;
+      padding-bottom: 100px;
     }
+
     header {
+      padding: 1.5rem 1rem 0.5rem;
       text-align: center;
-      padding: 1.2rem 0 0.5rem;
     }
-    h1 {
+
+    header h1 {
       color: var(--accent);
-      font-size: 1.4rem;
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
     }
-    main .section {
-      display: none;
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      padding: 0 1rem;
     }
-    main .section.active {
-      display: block;
-      animation: fadeIn 0.4s ease-in;
-    }
+
     .card {
       background: var(--card);
-      padding: 1rem;
       border-radius: 12px;
-      margin: 1rem 0;
+      padding: 1rem;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
-    .progress {
-      height: 6px;
-      background: #333;
-      border-radius: 4px;
-      margin-top: 6px;
-      overflow: hidden;
+
+    .card p {
+      margin: 0.4rem 0 0;
+      font-size: 0.75rem;
+      color: var(--subtle);
     }
-    .bar {
-      height: 100%;
-      background: var(--success);
-      width: 0%;
-      transition: width 0.4s ease;
+
+    .section {
+      margin: 0 1rem 1.5rem;
     }
+
+    .section h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .token-box {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .token-box a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+
     nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       display: flex;
       justify-content: space-around;
-      background: var(--bg);
-      padding: 0.6rem 0;
-      border-top: 1px solid #222;
+      background: var(--card);
+      padding: 0.8rem 0;
+      border-top: 1px solid #333;
     }
+
     nav a {
-      color: var(--text);
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
+      color: var(--text);
       text-decoration: none;
     }
+
     nav a.active {
       color: var(--accent);
       font-weight: bold;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -87,118 +116,68 @@
 
   <header>
     <h1>WarpAI</h1>
-    <p>Spåra din onchain-aktivitet i realtid</p>
+    <p>Spåra gas, XP, och belöningar i realtid</p>
   </header>
 
-  <main>
+  <div class="grid-2">
+    <div class="card" onclick="loadGas()">
+      <div>⛽</div>
+      <strong>Gaspris</strong>
+      <p id="gasInfo">Tryck för gas</p>
+    </div>
+    <div class="card" onclick="claimXP()">
+      <div>🎁</div>
+      <strong>Hämta XP</strong>
+      <p id="xpInfo">Tryck för XP</p>
+    </div>
+  </div>
 
-    <!-- Home -->
-    <section id="home" class="section active">
-      <div class="card" onclick="loadGas()">
-        <h3>⛽ Gaspris</h3>
-        <div class="progress"><div id="gasBar" class="bar"></div></div>
-        <p id="gasInfo">Tryck för att ladda gas</p>
-      </div>
-      <div class="card" onclick="claimXP()">
-        <h3>🎁 XP Claim</h3>
-        <div class="progress"><div id="xpBar" class="bar" style="background: var(--warning);"></div></div>
-        <p id="xpInfo">Tryck för att claima</p>
-      </div>
-      <div class="card" onclick="snapshotXP()">
-        <h3>📸 Snapshot</h3>
-        <p>Skapa ögonblicksbild av XP</p>
-      </div>
-    </section>
+  <div class="section">
+    <h3>🪙 Warp Token</h3>
+    <div class="token-box">
+      Symbol: <strong>$WARP</strong><br>
+      Contract: <code>0x0cd1…0482</code><br>
+      <a href="https://zora.co" target="_blank">Köp på Zora</a>
+    </div>
+  </div>
 
-    <!-- Token -->
-    <section id="token" class="section">
-      <div class="card">
-        <h3>🪙 Warp Token</h3>
-        <p>
-          <strong>Symbol:</strong> $WARP<br>
-          <strong>Contract:</strong> 0x0cd1...0482<br>
-          <a href="https://zora.co/collect/base:0x0cd1e9c691af8d4d34efcc089a40b31c691d0482" target="_blank">Köp på Zora</a>
-        </p>
-      </div>
-    </section>
-
-    <!-- Leaderboard -->
-    <section id="leaderboard" class="section">
-      <div class="card">
-        <h3>🏆 Topp XP-användare</h3>
-        <ul id="leaderList">
-          <li>0x1234…abcd – 5000 XP</li>
-          <li>0x5678…efgh – 4500 XP</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Profile -->
-    <section id="profile" class="section">
-      <div class="card">
-        <h3>👤 Din profil</h3>
-        <p id="rewardStatus">Ej inloggad</p>
-        <button onclick="checkToken()">Kolla supporterstatus</button>
-      </div>
-    </section>
-
-    <!-- Overview -->
-    <section id="overview" class="section">
-      <div class="card">
-        <h3>📊 Översikt</h3>
-        <p id="overviewText">Din aktivitet visas här.</p>
-      </div>
-    </section>
-
-  </main>
+  <div class="section">
+    <h3>🎖️ Dina Belöningar</h3>
+    <ul>
+      <li>7-dagars streak: <strong>✅</strong></li>
+      <li>Totalt XP: <strong id="totalXP">0</strong></li>
+      <li>Supporterstatus: <strong>Ej verifierad</strong></li>
+    </ul>
+  </div>
 
   <nav>
-    <a href="#" class="active" onclick="switchTab('home')">🏠</a>
-    <a href="#" onclick="switchTab('token')">🪙</a>
-    <a href="#" onclick="switchTab('leaderboard')">🏆</a>
-    <a href="#" onclick="switchTab('profile')">👤</a>
-    <a href="#" onclick="switchTab('overview')">📊</a>
+    <a href="#" class="active">🏠 Hem</a>
+    <a href="#">📈 Track</a>
+    <a href="#">🎁 Rewards</a>
+    <a href="#">📊 Stats</a>
+    <a href="#">👤 Profil</a>
   </nav>
 
   <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
-      document.querySelectorAll('nav a').forEach(link => {
-        if (link.getAttribute('onclick').includes(tabId)) {
-          link.classList.add('active');
-        }
-      });
-    }
+    let totalXP = 0;
 
     function loadGas() {
-      const gasBar = document.getElementById('gasBar');
-      const gasInfo = document.getElementById('gasInfo');
+      document.getElementById('gasInfo').textContent = 'Laddar...';
       fetch('https://api.owlracle.info/v4/base/gas?apikey=demo')
         .then(res => res.json())
         .then(data => {
-          const price = data.speeds[1].gasPrice;
-          gasInfo.textContent = `${price} Gwei`;
-          gasBar.style.width = '40%';
+          document.getElementById('gasInfo').textContent = data.speeds[1].gasPrice + ' Gwei';
         })
-        .catch(() => gasInfo.textContent = 'Kunde inte hämta gas');
+        .catch(() => {
+          document.getElementById('gasInfo').textContent = 'Fel vid hämtning';
+        });
     }
 
     function claimXP() {
-      const xp = Math.floor(Math.random() * 1000);
-      document.getElementById('xpBar').style.width = (xp / 1000 * 100) + '%';
+      const xp = Math.floor(Math.random() * 100 + 1);
+      totalXP += xp;
       document.getElementById('xpInfo').textContent = `+${xp} XP`;
-      document.getElementById('overviewText').textContent = `Du claimade ${xp} XP idag!`;
-    }
-
-    function snapshotXP() {
-      alert('Snapshot-funktion kommer snart!');
-    }
-
-    function checkToken() {
-      const reward = document.getElementById('rewardStatus');
-      reward.textContent = '✅ Early Supporter sedan 2025-01-01';
+      document.getElementById('totalXP').textContent = totalXP;
     }
   </script>
 
