@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WarpAI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <style>
     :root {
       --primary: #7A5FFF;
@@ -12,6 +12,7 @@
       --bg: #0d0d0d;
       --card: #1a1a1a;
       --accent: #10B981;
+      --warning: #F59E0B;
     }
 
     body {
@@ -19,8 +20,8 @@
       color: var(--text);
       font-family: 'Inter', sans-serif;
       margin: 0 auto;
-      max-width: 420px;
-      padding: 0 12px;
+      max-width: 440px;
+      padding: 0 12px 80px;
     }
 
     header {
@@ -31,6 +32,7 @@
     #brand {
       color: var(--primary);
       font-weight: 700;
+      font-size: 1.1rem;
     }
 
     .tab-section {
@@ -41,25 +43,51 @@
       display: block;
     }
 
-    .dashboard, .overview, .placeholder {
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .action-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .action-card:hover {
+      background: #262626;
+    }
+
+    .metric {
+      font-size: 0.75rem;
+      color: #ccc;
+      margin-top: 6px;
+    }
+
+    .progress {
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .bar {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .overview, .placeholder {
       background: var(--card);
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 20px;
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .action-card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
-      font-size: 0.75rem;
     }
 
     nav {
@@ -67,7 +95,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      max-width: 420px;
+      max-width: 440px;
       margin: 0 auto;
       display: flex;
       justify-content: space-around;
@@ -77,14 +105,24 @@
     }
 
     nav a {
-      color: #888;
-      font-size: 0.7rem;
+      color: #ccc;
+      font-size: 0.85rem;
       text-decoration: none;
       text-align: center;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--primary);
     }
 
     nav a.active {
       color: var(--primary);
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -92,41 +130,57 @@
   <header>
     <div id="brand">WarpAI</div>
     <h1 style="font-size: 1.2rem; margin-bottom: 6px;">Onchain Activity</h1>
-    <p style="font-size: 0.8rem; color: #aaa;">Track your life on-chain</p>
+    <p style="font-size: 0.85rem; color: #aaa;">Track your wallet, XP and gas fees</p>
   </header>
 
-  <section id="home" class="tab-section active">
-    <div class="dashboard">
-      <div class="action-card">👛<br><strong>Wallet</strong></div>
-      <div class="action-card">🎁<br><strong>Claim</strong></div>
-      <div class="action-card">📍<br><strong>Track</strong></div>
-    </div>
-    <div class="overview">
-      <h3>📊 Overview</h3>
-      <p>This is your dashboard. All info loads here depending on tab.</p>
-    </div>
-  </section>
+  <main>
+    <section id="home" class="tab-section active">
+      <div class="dashboard">
+        <div class="action-card" onclick="loadGas()">
+          👛<br><strong>Wallet</strong>
+          <div class="metric" id="gasInfo">Tap to load gas</div>
+          <div class="progress"><div id="gasBar" class="bar" style="width: 0%; background: var(--accent);"></div></div>
+        </div>
 
-  <section id="track" class="tab-section">
-    <div class="placeholder">
-      <h3>📈 Tracking</h3>
-      <p>Input wallet address to view historical data, fees, mints etc.</p>
-    </div>
-  </section>
+        <div class="action-card" onclick="claimXP()">
+          🎁<br><strong>Claim</strong>
+          <div class="metric" id="xpInfo">Tap to claim</div>
+          <div class="progress"><div id="xpBar" class="bar" style="width: 0%; background: var(--warning);"></div></div>
+        </div>
 
-  <section id="leader" class="tab-section">
-    <div class="placeholder">
-      <h3>🏆 Leaderboard</h3>
-      <p>Top active users, streak rewards, early supporter badges</p>
-    </div>
-  </section>
+        <div class="action-card" onclick="showSnapshot()">
+          📍<br><strong>Track</strong>
+          <div class="metric">Snapshot your XP</div>
+        </div>
+      </div>
 
-  <section id="profile" class="tab-section">
-    <div class="placeholder">
-      <h3>👤 Profile</h3>
-      <p>Connect wallet, view stats, customize username & vibes</p>
-    </div>
-  </section>
+      <div class="overview">
+        <h3>📊 Overview</h3>
+        <p id="overviewText">Your activity will show up here after interacting.</p>
+      </div>
+    </section>
+
+    <section id="track" class="tab-section">
+      <div class="placeholder">
+        <h3>📈 Tracking</h3>
+        <p>View past transactions, streaks and gas history (coming soon)</p>
+      </div>
+    </section>
+
+    <section id="leader" class="tab-section">
+      <div class="placeholder">
+        <h3>🏆 Leaderboard</h3>
+        <p>Top XP users and early supporter rankings (in dev)</p>
+      </div>
+    </section>
+
+    <section id="profile" class="tab-section">
+      <div class="placeholder">
+        <h3>👤 Profile</h3>
+        <p>Connect wallet, view stats, customize vibes</p>
+      </div>
+    </section>
+  </main>
 
   <nav>
     <a href="#" onclick="switchTab('home')" class="active">🏠<br>Home</a>
@@ -140,7 +194,48 @@
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      [...document.querySelectorAll('nav a')].find(a => a.innerHTML.includes(id.charAt(0).toUpperCase())).classList.add('active');
+      Array.from(document.querySelectorAll('nav a'))
+        .find(a => a.innerHTML.toLowerCase().includes(id))
+        .classList.add('active');
+    }
+
+    async function claimXP() {
+      const address = prompt("Enter wallet address:");
+      if (!address) return;
+      try {
+        const res = await fetch('/api/claim-xp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address })
+        });
+        const data = await res.json();
+        document.getElementById("xpBar").style.width = `${Math.min(data.streak * 10, 100)}%`;
+        document.getElementById("xpInfo").innerText = `${data.streak}d | ${data.xp} XP`;
+        document.getElementById("overviewText").innerText = `You claimed ${data.reward} XP!`;
+      } catch (error) {
+        console.error("Error claiming XP:", error);
+        document.getElementById("xpInfo").innerText = "Error claiming XP";
+        document.getElementById("overviewText").innerText = "Failed to claim XP. Please try again.";
+      }
+    }
+
+    async function showSnapshot() {
+      const address = prompt("Wallet address for snapshot:");
+      if (!address) return;
+      window.open(`/api/snapshot/${address}`, '_blank');
+    }
+
+    async function loadGas() {
+      try {
+        const res = await fetch('/api/gas');
+        const data = await res.json();
+        const price = data.base?.speeds?.[1]?.gasPrice || "N/A";
+        document.getElementById("gasInfo").innerText = `Fast: ${price} Gwei`;
+        document.getElementById("gasBar").style.width = `30%`;
+      } catch (e) {
+        console.error("Error loading gas:", e);
+        document.getElementById("gasInfo").innerText = "Error loading gas";
+      }
     }
   </script>
 </body>
