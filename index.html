@@ -1,185 +1,236 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WarpAI | Din Onchain-Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WarpAI | Onchain Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <style>
     :root {
-      --accent: #7c3aed;
-      --bg: #121212;
-      --card: #1e1e1e;
-      --text: #f1f1f1;
-      --subtle: #a0a0a0;
-      --highlight: #10b981;
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --accent: #6366f1;
+      --text: #e5e5e5;
+      --border: #2a2a2a;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      max-width: 480px;
-      margin: 0 auto;
       font-family: system-ui, sans-serif;
-      padding-bottom: 100px;
+      margin: 0;
+      padding-bottom: 80px;
     }
 
     header {
-      padding: 1.5rem 1rem 0.5rem;
       text-align: center;
+      padding: 1.5rem 1rem 0.5rem;
     }
 
-    header h1 {
+    h1 {
       color: var(--accent);
-      font-size: 1.5rem;
       margin-bottom: 0.25rem;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-      padding: 0 1rem;
+    p {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 480px;
+      margin: auto;
+      padding: 1rem;
     }
 
     .card {
       background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1rem;
-      font-size: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 10px #00000030;
     }
 
-    .card p {
-      margin: 0.4rem 0 0;
-      font-size: 0.75rem;
-      color: var(--subtle);
+    .card h3 {
+      margin: 0.5rem 0;
     }
 
-    .section {
-      margin: 0 1rem 1.5rem;
-    }
-
-    .section h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
-
-    .token-box {
-      background: var(--card);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
+    .card .label {
       font-size: 0.85rem;
+      color: #aaa;
     }
 
-    .token-box a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      background: var(--accent);
-      color: #fff;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
+    .progress-bar {
+      background: #333;
+      height: 6px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      transition: width 0.3s ease;
     }
 
     nav {
       position: fixed;
       bottom: 0;
       width: 100%;
-      max-width: 480px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-around;
-      background: var(--card);
-      padding: 0.8rem 0;
-      border-top: 1px solid #333;
+      padding: 0.5rem 0;
+      z-index: 10;
     }
 
     nav a {
-      text-align: center;
-      font-size: 0.75rem;
       color: var(--text);
       text-decoration: none;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     nav a.active {
       color: var(--accent);
-      font-weight: bold;
+    }
+
+    .icon {
+      font-size: 1.4rem;
+    }
+
+    .section-hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1>WarpAI</h1>
-    <p>Spåra gas, XP, och belöningar i realtid</p>
+    <p>Track gas, XP and rewards in real-time</p>
   </header>
 
-  <div class="grid-2">
-    <div class="card" onclick="loadGas()">
-      <div>⛽</div>
-      <strong>Gaspris</strong>
-      <p id="gasInfo">Tryck för gas</p>
-    </div>
-    <div class="card" onclick="claimXP()">
-      <div>🎁</div>
-      <strong>Hämta XP</strong>
-      <p id="xpInfo">Tryck för XP</p>
-    </div>
-  </div>
+  <main id="main-content">
+    <!-- Home Section -->
+    <section id="home-section">
+      <div class="card" onclick="loadGas()">
+        <h3>⛽ Gas Price</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="gas-fill" style="width: 30%; background: var(--warning);"></div>
+        </div>
+        <p class="label" id="gas-label">Tap to load gas</p>
+      </div>
 
-  <div class="section">
-    <h3>🪙 Warp Token</h3>
-    <div class="token-box">
-      Symbol: <strong>$WARP</strong><br>
-      Contract: <code>0x0cd1…0482</code><br>
-      <a href="https://zora.co" target="_blank">Köp på Zora</a>
-    </div>
-  </div>
+      <div class="card" onclick="claimXP()">
+        <h3>🎁 XP Streak</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="xp-fill" style="width: 60%; background: var(--success);"></div>
+        </div>
+        <p class="label" id="xp-label">Tap to claim XP</p>
+      </div>
 
-  <div class="section">
-    <h3>🎖️ Dina Belöningar</h3>
-    <ul>
-      <li>7-dagars streak: <strong>✅</strong></li>
-      <li>Totalt XP: <strong id="totalXP">0</strong></li>
-      <li>Supporterstatus: <strong>Ej verifierad</strong></li>
-    </ul>
-  </div>
+      <div class="card">
+        <h3>📸 Snapshot</h3>
+        <p class="label">Coming soon...</p>
+      </div>
+    </section>
+
+    <!-- Rewards Section -->
+    <section id="rewards-section" class="section-hidden">
+      <div class="card">
+        <h3>🏆 Leaderboard</h3>
+        <p class="label">1. @crypto_og — 1420 XP<br>2. @degen — 1205 XP<br>3. @you — 900 XP</p>
+      </div>
+
+      <div class="card">
+        <h3>⭐ Your Rewards</h3>
+        <p class="label">Connect wallet to check reward status</p>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats-section" class="section-hidden">
+      <div class="card">
+        <h3>📊 Tracking</h3>
+        <p class="label">Transactions: 12<br>Gas Spent: 0.0021 ETH<br>Active Days: 4/7</p>
+      </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile-section" class="section-hidden">
+      <div class="card">
+        <h3>👤 Profile</h3>
+        <p class="label">Connect wallet to view stats</p>
+      </div>
+    </section>
+  </main>
 
   <nav>
-    <a href="#" class="active">🏠 Hem</a>
-    <a href="#">📈 Track</a>
-    <a href="#">🎁 Rewards</a>
-    <a href="#">📊 Stats</a>
-    <a href="#">👤 Profil</a>
+    <a href="#" class="active" onclick="switchTab('home')">
+      <span class="icon">🏠</span>
+      Home
+    </a>
+    <a href="#" onclick="switchTab('track')">
+      <span class="icon">📈</span>
+      Stats
+    </a>
+    <a href="#" onclick="switchTab('rewards')">
+      <span class="icon">🎁</span>
+      Rewards
+    </a>
+    <a href="#" onclick="switchTab('profile')">
+      <span class="icon">👤</span>
+      Profile
+    </a>
   </nav>
 
   <script>
-    let totalXP = 0;
+    const tabs = {
+      home: 'home-section',
+      rewards: 'rewards-section',
+      track: 'stats-section',
+      profile: 'profile-section',
+    };
 
-    function loadGas() {
-      document.getElementById('gasInfo').textContent = 'Laddar...';
-      fetch('https://api.owlracle.info/v4/base/gas?apikey=demo')
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('gasInfo').textContent = data.speeds[1].gasPrice + ' Gwei';
-        })
-        .catch(() => {
-          document.getElementById('gasInfo').textContent = 'Fel vid hämtning';
-        });
+    function switchTab(tab) {
+      Object.values(tabs).forEach(id => {
+        document.getElementById(id).classList.add('section-hidden');
+      });
+      document.getElementById(tabs[tab]).classList.remove('section-hidden');
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      event.target.closest('a').classList.add('active');
+    }
+
+    async function loadGas() {
+      try {
+        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
+        const data = await res.json();
+        const gwei = data.speeds[1].gasPrice;
+        const fill = document.getElementById('gas-fill');
+        fill.style.width = Math.min(gwei / 200 * 100, 100) + '%';
+        fill.style.background = gwei < 15 ? 'var(--success)' : gwei < 30 ? 'var(--warning)' : 'var(--danger)';
+        document.getElementById('gas-label').textContent = `${gwei} Gwei`;
+      } catch (e) {
+        document.getElementById('gas-label').textContent = 'Failed to load';
+      }
     }
 
     function claimXP() {
-      const xp = Math.floor(Math.random() * 100 + 1);
-      totalXP += xp;
-      document.getElementById('xpInfo').textContent = `+${xp} XP`;
-      document.getElementById('totalXP').textContent = totalXP;
+      const fill = document.getElementById('xp-fill');
+      const label = document.getElementById('xp-label');
+      let xp = Number(localStorage.getItem('xp') || 0);
+      xp += 100;
+      localStorage.setItem('xp', xp);
+      fill.style.width = Math.min((xp % 1000) / 10, 100) + '%';
+      label.textContent = `${xp} XP`;
     }
   </script>
-
 </body>
 </html>
