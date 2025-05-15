@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WarpAI | Onchain Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WarpAI Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <style>
     :root {
       --bg: #0d0d0d;
       --card: #1a1a1a;
-      --accent: #6366f1;
-      --text: #e5e5e5;
-      --border: #2a2a2a;
+      --text: #f1f1f1;
+      --accent: #7a5cff;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
@@ -20,217 +19,199 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: system-ui, sans-serif;
-      margin: 0;
+      max-width: 480px;
+      margin: 0 auto;
       padding-bottom: 80px;
+      font-family: system-ui, sans-serif;
     }
 
     header {
-      text-align: center;
-      padding: 1.5rem 1rem 0.5rem;
-    }
-
-    h1 {
-      color: var(--accent);
-      margin-bottom: 0.25rem;
-    }
-
-    p {
-      color: #999;
-      font-size: 0.9rem;
-    }
-
-    main {
-      max-width: 480px;
-      margin: auto;
       padding: 1rem;
+      border-bottom: 1px solid #222;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      color: var(--accent);
+    }
+
+    .card-row {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem;
     }
 
     .card {
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 10px #00000030;
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.8rem;
+      cursor: pointer;
     }
 
-    .card h3 {
-      margin: 0.5rem 0;
-    }
-
-    .card .label {
-      font-size: 0.85rem;
-      color: #aaa;
-    }
-
-    .progress-bar {
-      background: #333;
+    .meter {
       height: 6px;
       border-radius: 4px;
+      background: #333;
+      margin-top: 6px;
       overflow: hidden;
-      margin: 0.5rem 0;
     }
 
-    .progress-fill {
+    .fill {
       height: 100%;
-      transition: width 0.3s ease;
+      width: 30%;
+      background: var(--success);
+      transition: width 0.4s ease;
+    }
+
+    main section {
+      display: none;
+      padding: 1rem;
+    }
+
+    section.active {
+      display: block;
     }
 
     nav {
       position: fixed;
       bottom: 0;
-      width: 100%;
-      background: var(--bg);
-      border-top: 1px solid var(--border);
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       justify-content: space-around;
-      padding: 0.5rem 0;
-      z-index: 10;
+      width: 100%;
+      max-width: 480px;
+      background: #111;
+      border-top: 1px solid #333;
     }
 
     nav a {
-      color: var(--text);
-      text-decoration: none;
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem 0;
       font-size: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      color: #777;
+      text-decoration: none;
     }
 
     nav a.active {
       color: var(--accent);
-    }
-
-    .icon {
-      font-size: 1.4rem;
-    }
-
-    .section-hidden {
-      display: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>WarpAI</h1>
-    <p>Track gas, XP and rewards in real-time</p>
+    <h1>WarpAI <small style="color:#aaa;">/ Tracker</small></h1>
   </header>
 
-  <main id="main-content">
+  <main>
     <!-- Home Section -->
-    <section id="home-section">
-      <div class="card" onclick="loadGas()">
-        <h3>⛽ Gas Price</h3>
-        <div class="progress-bar">
-          <div class="progress-fill" id="gas-fill" style="width: 30%; background: var(--warning);"></div>
+    <section id="home" class="active">
+      <div class="card-row">
+        <div class="card" onclick="loadGas()">
+          ⛽ Gas
+          <div class="meter"><div id="gasBar" class="fill" style="width:0%"></div></div>
+          <div id="gasInfo">Tap</div>
         </div>
-        <p class="label" id="gas-label">Tap to load gas</p>
+        <div class="card" onclick="claimXP()">
+          🎁 Claim
+          <div class="meter"><div id="xpBar" class="fill" style="width:0%; background: var(--warning);"></div></div>
+          <div id="xpInfo">Tap</div>
+        </div>
+        <div class="card" onclick="snapshotXP()">
+          📸 Snapshot
+          <div class="meter" style="opacity:0;"></div>
+          <div>Save</div>
+        </div>
       </div>
 
-      <div class="card" onclick="claimXP()">
-        <h3>🎁 XP Streak</h3>
-        <div class="progress-bar">
-          <div class="progress-fill" id="xp-fill" style="width: 60%; background: var(--success);"></div>
-        </div>
-        <p class="label" id="xp-label">Tap to claim XP</p>
+      <div style="padding: 1rem;">
+        <h4>Overview</h4>
+        <p id="overviewText">Interact to show data...</p>
       </div>
+    </section>
 
-      <div class="card">
-        <h3>📸 Snapshot</h3>
-        <p class="label">Coming soon...</p>
-      </div>
+    <!-- Track Section -->
+    <section id="track">
+      <h4>📈 Track</h4>
+      <p>Coming soon: Add address to follow on-chain.</p>
     </section>
 
     <!-- Rewards Section -->
-    <section id="rewards-section" class="section-hidden">
-      <div class="card">
-        <h3>🏆 Leaderboard</h3>
-        <p class="label">1. @crypto_og — 1420 XP<br>2. @degen — 1205 XP<br>3. @you — 900 XP</p>
-      </div>
-
-      <div class="card">
-        <h3>⭐ Your Rewards</h3>
-        <p class="label">Connect wallet to check reward status</p>
-      </div>
+    <section id="rewards">
+      <h4>🎖 Rewards</h4>
+      <p id="rewardStatus">Checking...</p>
     </section>
 
     <!-- Stats Section -->
-    <section id="stats-section" class="section-hidden">
-      <div class="card">
-        <h3>📊 Tracking</h3>
-        <p class="label">Transactions: 12<br>Gas Spent: 0.0021 ETH<br>Active Days: 4/7</p>
-      </div>
+    <section id="stats">
+      <h4>📊 Stats</h4>
+      <ul>
+        <li>Total XP: <span id="totalXP">0</span></li>
+        <li>Streak: <span id="streak">0</span> days</li>
+      </ul>
     </section>
 
     <!-- Profile Section -->
-    <section id="profile-section" class="section-hidden">
-      <div class="card">
-        <h3>👤 Profile</h3>
-        <p class="label">Connect wallet to view stats</p>
-      </div>
+    <section id="profile">
+      <h4>👤 Profile</h4>
+      <p>Address: <span id="walletAddress">Not connected</span></p>
     </section>
   </main>
 
   <nav>
-    <a href="#" class="active" onclick="switchTab('home')">
-      <span class="icon">🏠</span>
-      Home
-    </a>
-    <a href="#" onclick="switchTab('track')">
-      <span class="icon">📈</span>
-      Stats
-    </a>
-    <a href="#" onclick="switchTab('rewards')">
-      <span class="icon">🎁</span>
-      Rewards
-    </a>
-    <a href="#" onclick="switchTab('profile')">
-      <span class="icon">👤</span>
-      Profile
-    </a>
+    <a href="#" onclick="switchTab('home')" class="active">🏠</a>
+    <a href="#" onclick="switchTab('track')">📈</a>
+    <a href="#" onclick="switchTab('rewards')">🎖</a>
+    <a href="#" onclick="switchTab('stats')">📊</a>
+    <a href="#" onclick="switchTab('profile')">👤</a>
   </nav>
 
   <script>
-    const tabs = {
-      home: 'home-section',
-      rewards: 'rewards-section',
-      track: 'stats-section',
-      profile: 'profile-section',
-    };
+    let wallet = "0x123...abc";
+    let xp = 420;
+    let streak = 3;
 
-    function switchTab(tab) {
-      Object.values(tabs).forEach(id => {
-        document.getElementById(id).classList.add('section-hidden');
-      });
-      document.getElementById(tabs[tab]).classList.remove('section-hidden');
-      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      event.target.closest('a').classList.add('active');
+    function switchTab(id) {
+      document.querySelectorAll("main section").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+      event.target.classList.add("active");
     }
 
-    async function loadGas() {
-      try {
-        const res = await fetch('https://api.owlracle.info/v4/base/gas?apikey=demo');
-        const data = await res.json();
-        const gwei = data.speeds[1].gasPrice;
-        const fill = document.getElementById('gas-fill');
-        fill.style.width = Math.min(gwei / 200 * 100, 100) + '%';
-        fill.style.background = gwei < 15 ? 'var(--success)' : gwei < 30 ? 'var(--warning)' : 'var(--danger)';
-        document.getElementById('gas-label').textContent = `${gwei} Gwei`;
-      } catch (e) {
-        document.getElementById('gas-label').textContent = 'Failed to load';
-      }
+    function loadGas() {
+      const price = Math.random() * 100;
+      const percent = Math.min(price, 100);
+      const gasBar = document.getElementById("gasBar");
+      gasBar.style.width = percent + "%";
+      gasBar.style.background = price < 30 ? "green" : price < 60 ? "orange" : "red";
+      document.getElementById("gasInfo").innerText = price.toFixed(1) + " Gwei";
     }
 
     function claimXP() {
-      const fill = document.getElementById('xp-fill');
-      const label = document.getElementById('xp-label');
-      let xp = Number(localStorage.getItem('xp') || 0);
       xp += 100;
-      localStorage.setItem('xp', xp);
-      fill.style.width = Math.min((xp % 1000) / 10, 100) + '%';
-      label.textContent = `${xp} XP`;
+      streak += 1;
+      document.getElementById("xpInfo").innerText = `+100! Total: ${xp}`;
+      document.getElementById("xpBar").style.width = Math.min(xp / 10, 100) + "%";
+      document.getElementById("overviewText").innerText = `You claimed 100 XP. Streak: ${streak} days.`;
+      document.getElementById("totalXP").innerText = xp;
+      document.getElementById("streak").innerText = streak;
     }
+
+    function snapshotXP() {
+      alert(`Snapshot: ${wallet}, XP: ${xp}, Streak: ${streak}`);
+    }
+
+    // Simulate connection
+    document.getElementById("walletAddress").innerText = wallet;
+    document.getElementById("rewardStatus").innerText = "✅ Early supporter";
   </script>
+
 </body>
 </html>
