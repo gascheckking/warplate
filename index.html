@@ -1,105 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WarpAI Tracker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <title>WarpAI Onchain Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <style>
-    :root {
-      --bg: #0d0d0d;
-      --card: #1a1a1a;
-      --text: #f1f1f1;
-      --accent: #7a5cff;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-    }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      max-width: 480px;
-      margin: 0 auto;
-      padding-bottom: 80px;
+      background-color: #0d0d0d;
+      color: #fff;
       font-family: system-ui, sans-serif;
+      padding: 0;
+      margin: 0;
     }
 
     header {
       padding: 1rem;
+      text-align: left;
       border-bottom: 1px solid #222;
     }
 
     header h1 {
+      color: #7a5cff;
+      font-size: 1.5rem;
       margin: 0;
-      font-size: 1.3rem;
-      color: var(--accent);
     }
 
-    .card-row {
-      display: flex;
-      gap: 0.5rem;
-      padding: 0.5rem;
-    }
-
-    .card {
-      background: var(--card);
-      flex: 1;
-      padding: 0.75rem;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .meter {
-      height: 6px;
-      border-radius: 4px;
-      background: #333;
-      margin-top: 6px;
-      overflow: hidden;
-    }
-
-    .fill {
-      height: 100%;
-      width: 30%;
-      background: var(--success);
-      transition: width 0.4s ease;
-    }
-
-    main section {
-      display: none;
+    main {
       padding: 1rem;
+      max-width: 480px;
+      margin: auto;
     }
 
-    section.active {
-      display: block;
+    .section-title {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+
+    .gas-meter-container {
+      background-color: #222;
+      height: 20px;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .gas-fill {
+      height: 100%;
+      width: 40%;
+      transition: width 1s ease-in-out;
+      border-radius: 10px;
     }
 
     nav {
       position: fixed;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: space-around;
       width: 100%;
       max-width: 480px;
-      background: #111;
-      border-top: 1px solid #333;
+      display: flex;
+      justify-content: space-around;
+      background-color: #0d0d0d;
+      padding: 0.5rem 0;
+      border-top: 1px solid #222;
     }
 
     nav a {
-      flex: 1;
-      text-align: center;
-      padding: 0.5rem 0;
-      font-size: 0.75rem;
-      color: #777;
+      color: #888;
       text-decoration: none;
+      font-size: 0.8rem;
+      text-align: center;
     }
 
     nav a.active {
-      color: var(--accent);
+      color: #7a5cff;
+    }
+
+    .card {
+      background: #1a1a1a;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .label {
       font-weight: bold;
     }
   </style>
@@ -107,111 +93,58 @@
 <body>
 
   <header>
-    <h1>WarpAI <small style="color:#aaa;">/ Tracker</small></h1>
+    <h1>WarpAI</h1>
+    <p style="color:#999; font-size: 0.9rem;">Onchain Tracker</p>
   </header>
 
   <main>
-    <!-- Home Section -->
-    <section id="home" class="active">
-      <div class="card-row">
-        <div class="card" onclick="loadGas()">
-          ⛽ Gas
-          <div class="meter"><div id="gasBar" class="fill" style="width:0%"></div></div>
-          <div id="gasInfo">Tap</div>
-        </div>
-        <div class="card" onclick="claimXP()">
-          🎁 Claim
-          <div class="meter"><div id="xpBar" class="fill" style="width:0%; background: var(--warning);"></div></div>
-          <div id="xpInfo">Tap</div>
-        </div>
-        <div class="card" onclick="snapshotXP()">
-          📸 Snapshot
-          <div class="meter" style="opacity:0;"></div>
-          <div>Save</div>
-        </div>
-      </div>
+    <!-- Gas Price -->
+    <div class="section-title">⛽ Gaspris</div>
+    <div class="gas-meter-container">
+      <div id="gasBar" class="gas-fill" style="background-color: green;"></div>
+    </div>
 
-      <div style="padding: 1rem;">
-        <h4>Overview</h4>
-        <p id="overviewText">Interact to show data...</p>
-      </div>
-    </section>
+    <!-- XP Claim -->
+    <div class="card">
+      <div class="label">🎁 XP Claim</div>
+      <p>Tryck för att claima din dagliga XP</p>
+    </div>
 
-    <!-- Track Section -->
-    <section id="track">
-      <h4>📈 Track</h4>
-      <p>Coming soon: Add address to follow on-chain.</p>
-    </section>
-
-    <!-- Rewards Section -->
-    <section id="rewards">
-      <h4>🎖 Rewards</h4>
-      <p id="rewardStatus">Checking...</p>
-    </section>
-
-    <!-- Stats Section -->
-    <section id="stats">
-      <h4>📊 Stats</h4>
-      <ul>
-        <li>Total XP: <span id="totalXP">0</span></li>
-        <li>Streak: <span id="streak">0</span> days</li>
-      </ul>
-    </section>
-
-    <!-- Profile Section -->
-    <section id="profile">
-      <h4>👤 Profile</h4>
-      <p>Address: <span id="walletAddress">Not connected</span></p>
-    </section>
+    <!-- Snapshot -->
+    <div class="card">
+      <div class="label">📸 Snapshot</div>
+      <p>Spara en bild av din XP & belöningar</p>
+    </div>
   </main>
 
   <nav>
-    <a href="#" onclick="switchTab('home')" class="active">🏠</a>
-    <a href="#" onclick="switchTab('track')">📈</a>
-    <a href="#" onclick="switchTab('rewards')">🎖</a>
-    <a href="#" onclick="switchTab('stats')">📊</a>
-    <a href="#" onclick="switchTab('profile')">👤</a>
+    <a href="#" class="active">🏠 Hem</a>
+    <a href="#">📈 Track</a>
+    <a href="#">🎁 Rewards</a>
+    <a href="#">📊 Stats</a>
+    <a href="#">👤 Profil</a>
   </nav>
 
   <script>
-    let wallet = "0x123...abc";
-    let xp = 420;
-    let streak = 3;
+    // Simulerar gasnivå som rör sig upp och ner med färgförändring
+    const gasBar = document.getElementById('gasBar');
+    let direction = 1;
+    let percent = 40;
 
-    function switchTab(id) {
-      document.querySelectorAll("main section").forEach(s => s.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-      document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
-      event.target.classList.add("active");
-    }
+    setInterval(() => {
+      percent += direction * 5;
+      if (percent >= 95 || percent <= 10) direction *= -1;
 
-    function loadGas() {
-      const price = Math.random() * 100;
-      const percent = Math.min(price, 100);
-      const gasBar = document.getElementById("gasBar");
-      gasBar.style.width = percent + "%";
-      gasBar.style.background = price < 30 ? "green" : price < 60 ? "orange" : "red";
-      document.getElementById("gasInfo").innerText = price.toFixed(1) + " Gwei";
-    }
+      gasBar.style.width = percent + '%';
 
-    function claimXP() {
-      xp += 100;
-      streak += 1;
-      document.getElementById("xpInfo").innerText = `+100! Total: ${xp}`;
-      document.getElementById("xpBar").style.width = Math.min(xp / 10, 100) + "%";
-      document.getElementById("overviewText").innerText = `You claimed 100 XP. Streak: ${streak} days.`;
-      document.getElementById("totalXP").innerText = xp;
-      document.getElementById("streak").innerText = streak;
-    }
-
-    function snapshotXP() {
-      alert(`Snapshot: ${wallet}, XP: ${xp}, Streak: ${streak}`);
-    }
-
-    // Simulate connection
-    document.getElementById("walletAddress").innerText = wallet;
-    document.getElementById("rewardStatus").innerText = "✅ Early supporter";
+      if (percent < 40) {
+        gasBar.style.backgroundColor = 'green';
+      } else if (percent < 70) {
+        gasBar.style.backgroundColor = 'orange';
+      } else {
+        gasBar.style.backgroundColor = 'red';
+      }
+    }, 1000);
   </script>
-
 </body>
 </html>
